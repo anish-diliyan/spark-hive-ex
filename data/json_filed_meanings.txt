@@ -1,0 +1,48 @@
+1. Account Owner Information:
+   1. "acct_ccy": "EUR"  ---  The currency of your account (Euros)
+   2. "acct_id": "NL12FAKE2629464121"  ---  Your account number (Dutch bank account)
+Helps identify whose account and what currency they are using. Like having your wallet ID and knowing it contains Euros.
+
+2. Balance Information:
+   1. "bal_aftr_bookg": 2405.0  ---  Your balance after transaction (2,405.00 EUR)
+   2. "bal_aftr_bookg_nmrc": 240500  ---  Same balance in cents (no decimal points)
+Shows your current balance in two formats. The numeric version (cents) prevents decimal point calculation errors.
+
+3. Transaction Amount Details:
+   1. "bookg_amt": 3.0  ---  Transaction amount (3.00 EUR)
+   2. "bookg_amt_nmrc": 300  ---  Amount in cents (300 cents = 3.00 EUR)
+   3. "bookg_cdt_dbt_ind": "CRDT"  ---  CRDT means you received money, DBIT would mean you sent money
+Shows how much money was transferred and whether it was incoming or outgoing.
+
+4. Timing Information:
+   1. "bookg_dt_tm_cet": "2024-06-01 00:02:37"  ---  Transaction time in Central European Time
+   2. "bookg_dt_tm_gmt": "2024-06-01 00:02:37"  ---  Transaction time in GMT
+   3. "year_month": 202406  ---  Year and month for easy filtering
+Helps track when exactly the transaction happened, useful for different time zones.
+
+5. Transaction Identifiers:
+   1. "booking_id": "c834efe7-aa11-4c60-acfb-ad5c369f3d28"  ---  Unique transaction ID
+   2. "end_to_end_id": "1102707c-63ca-4071-aa52-9ec2fcf923f2"  ---  Tracking ID throughout the transfer
+   3. "tx_acct_svcr_ref": "4bb46134-df94-4d25-8709-713d972d43dc"  ---  Bank's reference number
+   4. "ntry_seq_nb": 1804543  ---  Sequential number for ordering transactions
+Like tracking numbers for packages, helps trace transactions if issues arise.
+
+6. Recipient (Counterparty) Information:
+   1. "ctpty_nm": "Victoria Hendrikse"  ---  Who you're sending money to/receiving from
+   2. "ctpty_ctry": "Great Britain"  ---  Their country
+   3. "ctpty_adr_line1": "023 Williamson mills\nEast Laurenland\nWS1W 7DG"  ---  Their address
+   4. "ctpty_acct_ccy": "GBP"  ---  Their account currency (British Pounds)
+   5. "ctpty_acct_id_bban": "581_44_14_399"  ---  Their local account number
+   6. "ctpty_acct_id_iban": "GB37FAKE5814414399"  ---  Their international account number
+   7. "ctpty_agt_bic": "qtmAselRqX"  ---  Their bank's identification code
+Complete information about who is on the other end of the transaction.
+
+7. Transaction Details:
+   1. "dtld_tx_tp": 4111  ---  Code indicating type of transaction
+   2. "rmt_inf_ustrd1": "Wedding gift"  ---  Purpose of payment
+   3. "csvbase_row_id": 1  ---  Database record identifier
+Helps categorize and understand why the money was transferred.
+
+Account Number: Both IBAN (GB37FAKE5814414399) and BBAN (581_44_14_399) formats are provided
+- If you are making a payment within the UK, you might just use the BBAN format
+- If someone from another country (like Germany) wants to send you money, they would need your IBAN
