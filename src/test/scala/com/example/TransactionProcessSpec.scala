@@ -9,7 +9,7 @@ object TransactionProcessSpec extends App {
     val context = CaspianContext()
     val currentDate = LocalDate.now().minusDays(1) // yesterday's date
     val environment = CaspianEnv.DEV
-    val migration = true
+    val migration = false
     // Run the process
     process.run(ctx = context, date = currentDate, env = environment, migration = migration)
 }
