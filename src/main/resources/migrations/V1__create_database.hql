@@ -1,2 +1,2 @@
-CREATE DATABASE IF NOT EXISTS counter_party;
+CREATE DATABASE IF NOT EXISTS transactions;
 
