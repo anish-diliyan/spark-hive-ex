@@ -71,3 +71,5 @@ Your application code uses SLF4J API to write logs
 The SLF4J API calls are routed through log4j-slf4j-impl
 
 These calls then use log4j-api and log4j-core to actually perform the logging
+
+The "provided" scope means that these dependencies will not be included during local development/running because it assumes these dependencies will be provided by the runtime environment (like a Spark cluster). 

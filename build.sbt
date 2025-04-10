@@ -14,9 +14,9 @@ ThisBuild / resolvers ++= Seq(
 
 lazy val commonDependencies = Seq(
   // Spark Core Dependencies
-  "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
-  "org.apache.spark" %% "spark-sql" % sparkVersion % "provided",
-  "org.apache.spark" %% "spark-hive" % sparkVersion % "provided",
+  "org.apache.spark" %% "spark-core" % sparkVersion,
+  "org.apache.spark" %% "spark-sql" % sparkVersion,
+  "org.apache.spark" %% "spark-hive" % sparkVersion,
 
   // Postgres Dependencies
   "org.postgresql" % "postgresql" % postgresVersion,
