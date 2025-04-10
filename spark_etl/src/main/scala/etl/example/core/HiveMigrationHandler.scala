@@ -126,7 +126,7 @@ class HiveMigrationHandler(spark: SparkSession) {
   }
 
   private def getMigrationFilesName: List[String] = {
-    val migrationDir = new File("src/main/resources/migrations")
+    val migrationDir = new File("spark_etl/src/main/resources/migrations")
     migrationDir
       .listFiles()
       .filter(_.getName.endsWith(".hql"))
