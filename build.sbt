@@ -1,4 +1,4 @@
-ThisBuild / name := "spark-hive-ex"
+ThisBuild / name := "spark-learning"
 ThisBuild / version := "0.1.0"
 ThisBuild / scalaVersion := "2.12.15"
 
@@ -12,7 +12,7 @@ ThisBuild / resolvers ++= Seq(
   "Apache Public" at "https://repository.apache.org/content/groups/public/"
 )
 
-libraryDependencies ++= Seq(
+lazy val commonDependencies = Seq(
   // Spark Core Dependencies
   "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-sql" % sparkVersion % "provided",
@@ -33,5 +33,14 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.15" % Test
 )
 
+lazy val spark_etl = (project in file("spark_etl"))
+  .settings(
+    name := "spark_etl",
+    libraryDependencies ++= commonDependencies
+  )
 
-
+lazy val spark_core = (project in file("spark_core"))
+  .settings(
+    name := "spark_core",
+    libraryDependencies ++= commonDependencies
+  )
