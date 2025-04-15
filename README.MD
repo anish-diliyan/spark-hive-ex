@@ -73,3 +73,127 @@ The SLF4J API calls are routed through log4j-slf4j-impl
 These calls then use log4j-api and log4j-core to actually perform the logging
 
 The "provided" scope means that these dependencies will not be included during local development/running because it assumes these dependencies will be provided by the runtime environment (like a Spark cluster). 
+
+Spark Optimization Techniques
+
+Partition tuning and management
+
+Caching and persistence strategies
+
+Memory management
+
+Broadcast variables and accumulators
+
+Spark SQL and DataFrames Advanced Concepts
+
+Window functions
+
+User-Defined Functions (UDFs)
+
+Custom aggregations
+
+Complex data types and nested schemas
+
+Spark Streaming
+
+Structured Streaming
+
+Stream processing with windowing
+
+Watermarking
+
+Integration with Kafka
+
+Spark MLlib
+
+Machine learning pipelines
+
+Feature engineering
+
+Model training and evaluation
+
+Hyperparameter tuning
+
+Advanced Data Processing
+
+Join optimizations
+
+Handling skewed data
+
+Custom partitioning strategies
+
+Delta Lake integration
+
+Spark Performance Monitoring
+
+Spark UI interpretation
+
+Metrics and instrumentation
+
+Debugging and troubleshooting
+
+Resource management
+
+// 1. map - Transforms each element of the RDD using the provided function
+val numbers = sc.parallelize(1 to 5)
+val doubled = numbers.map(x => x * 2)
+// Result: 2, 4, 6, 8, 10
+
+// 2. filter - Returns a new RDD containing only elements that satisfy the condition
+val evenNumbers = numbers.filter(x => x % 2 == 0)
+// Result: 2, 4
+
+// 3. flatMap - Similar to map, but each input item can be mapped to 0 or more output items
+val sentences = sc.parallelize(Array("Hello World", "How are you"))
+val words = sentences.flatMap(line => line.split(" "))
+// Result: "Hello", "World", "How", "are", "you"
+
+// 4. distinct - Returns a new RDD containing distinct elements
+val duplicateNumbers = sc.parallelize(List(1, 1, 2, 2, 3))
+val uniqueNumbers = duplicateNumbers.distinct()
+// Result: 1, 2, 3
+
+// 5. union - Combines two RDDs
+val rdd1 = sc.parallelize(1 to 3)
+val rdd2 = sc.parallelize(4 to 6)
+val combined = rdd1.union(rdd2)
+// Result: 1, 2, 3, 4, 5, 6
+
+// 6. intersection - Returns common elements between two RDDs
+val rddA = sc.parallelize(1 to 5)
+val rddB = sc.parallelize(4 to 8)
+val common = rddA.intersection(rddB)
+// Result: 4, 5
+
+// 7. groupByKey - Groups values for each key
+val pairs = sc.parallelize(Array(("A", 1), ("B", 2), ("A", 3)))
+val grouped = pairs.groupByKey()
+// Result: (A, [1, 3]), (B, [2])
+
+// 8. reduceByKey - Combines values for each key using the provided function
+val sumByKey = pairs.reduceByKey((a, b) => a + b)
+// Result: (A, 4), (B, 2)
+
+// 9. sortBy - Sorts RDD by given function
+val unsorted = sc.parallelize(Array(3, 1, 2, 4))
+val sorted = unsorted.sortBy(x => x)
+// Result: 1, 2, 3, 4
+
+// 10. coalesce and repartition
+// coalesce - Reduces the number of partitions
+val lessPartitions = rdd1.coalesce(2) // Only reduces partitions
+
+// repartition - Restructures the data into n partitions
+val repart = rdd1.repartition(4) // Can increase or decrease partitions
+
+// 11. mapPartitions - Transforms each partition as a whole
+val result = rdd1.mapPartitions(iterator => {
+// Process entire partition
+iterator.map(_ * 2)
+})
+
+// 12. zip - Pairs elements of two RDDs
+val rdd3 = sc.parallelize(List("a", "b", "c"))
+val rdd4 = sc.parallelize(List(1, 2, 3))
+val zipped = rdd3.zip(rdd4)
+// Result: (a,1), (b,2), (c,3)

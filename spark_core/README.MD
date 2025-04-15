@@ -110,7 +110,34 @@
     Lineage is a record of all transformations that need to be applied to the base data to get the final result. It's 
     like a recipe that Spark maintains to track how to reconstruct data from the original source.
 
-11. Various Read Modes:
+11. What is RDD?
+    RDD (Resilient Distributed Dataset) is the fundamental data structure and main programming abstraction in Apache 
+    Spark. It has three key characteristics:
+    - Resilient: RDDs are fault-tolerant, meaning they can recover from failures through a lineage graph. If a 
+       partition is lost or damaged due to node failures, Spark can recompute it using this lineage information.
+    - Distributed: The data is distributed across multiple nodes in a cluster, allowing parallel processing.
+    - Dataset: It's a collection of partitioned data elements.
+    
+12. What is DataSet?
+    A Dataset is a strongly-typed, structured collection of data that provides both static type safety and modern 
+    functional programming interfaces.
+    - Schema-aware: Datasets have a defined structure
+    - Type Safety: Provides compile-time type checking
+    - Performance: Offers high performance with automatic optimization
+    - Structured Data Handling: Best suited for structured data with type safety requirements
+    
+13. Difference between DataFrame, DataSet and RDD?
+    Feature          | RDD           | DataFrame      | Dataset
+    -----------------|---------------|----------------|------------------
+    Schema           | No            | Yes            | Yes
+    Optimization     | Manual        | Automatic      | Automatic
+    Type Safety      | Yes           | No             | Yes
+    Ease of Use      | Complex       | Simple         | Moderate
+    Performance      | Lower         | Highest        | High
+    Best For         | Unstructured  | Structured     | Structured with
+                     | Data          | Data           | Type Safety
+    
+14. Various Read Modes:
     The mode option determines how Spark handles corrupt records or parsing errors.
     1. PERMISSIVE Mode (Default)
        - sets corrupt records to null
@@ -120,10 +147,101 @@
     3. DROPMALFORMED Mode
        - Drops corrupt records
 
-12. Various Write Modes:
+15. Various Write Modes:
     1. Overwrite Mode: Completely replaces existing data
     2. Append Mode: Adds new data to existing data
     3. Ignore Mode: Does nothing if data exists
     4. ErrorIfExists Mode: Throws exception if data exists
-    
-    
+
+16. Columns and Expressions:
+    - Projection: Operate on data frame columns and obtain new data frames.
+    1. Columns: Columns are special objects that will allow you to obtain new data frames out of some source data
+       frames by processing the values inside. The col() method takes an argument, which is the column name that we want
+       to obtain. Column is a plain Jvm object that has No data inside.
+       - Different Ways to Reference Columns:
+         1. Using col() function: val salaryCol = col("salary")
+         2. Using DataFrame.col: val nameCol = employeeDF.col("name")
+         3. Using $ symbol: val deptCol = $"department"
+         4. Using column string reference: val idCol = employeeDF("id")
+         5. Using column() function: val salaryCol = column("salary")
+         6. Using Scala Symbol = val deptCol = 'department
+         7. Using plain column names: val salaryAndDept = employeeDF("name", "salary")
+    2. Expressions: Expressions are a powerful construct and will allow you to process data frames in almost any fashion
+       Selecting columns name is the simplest version of expression, Columns is a subtype of Expression, But after you 
+       obtain a simple expression, you can then chain it with various operators.
+       ```scala
+          val simpleExpression: Column = carsDF.col("Weight_in_lbs")
+          val weightInKilogram = simpleExpression / 2.2
+          carsDF.select(
+            col("Name"),
+            simpleExpression,
+            weightInKilogram.as("Weight_in_kg")
+          )
+       ```
+       Alternatively, instead of creating these complex expressions because in practice you will create very, very 
+       complex expressions, you can use the expr method, and you can pass in a SQL like string.
+       ```scala
+          carsDF.select(
+              col("Name"),
+              expr("Weight_in_lbs / 2.2").as("Weight_in_kg")
+          )
+       ```
+       Division operator on Column and inside expr and identical implementation but not same, so the result can slightly
+       differ.
+    3. Select with only expr() call: selectExpr
+       ```scala
+          carsDF.selectExpr(
+            "Name",
+            "Weight_in_lbs / 2.2 as Weight_in_kg"
+          )
+       ```
+    4. Adding a new Column to DF: withColumn()
+       - this will extend a Data Frame with additional column.
+       ```scala 
+           carsDF.withColumn(
+             "Weight_in_kg", col("Weight_in_lbs") / 2.2
+           )
+       ```
+    5. Renaming a Column: withColumnRenamed()
+       ```scala
+          carsDF.withColumnRenamed("Weight_in_lbs", "Weight in pounds")
+       ```
+       - CareFull with column names: When you're doing expressions, be sure to escape reserved characters like spaces or
+         hyphens inside Backticks because the compiler will then figure out that this weight in pounds is a single 
+         symbol, and it will treat it as one.
+       ```scala
+          carsDF.selectExpr("Weight_in_lbs / 2.2 as `Weight in Kg`")
+       ```
+    6. Remove a Column: drop()
+       ```scala
+          carsDF.drop("Weight_in_lbs", "Name")
+       ```
+17. Aggregation:
+    - Think of aggregation as summarizing data - like when you want to calculate totals, averages, or counts from a 
+      large dataset.
+    - Some frequently used functions:
+      1. count(): Counts rows
+      2. sum(): Adds up values
+      3. avg(): Calculates average
+      4. max(): Finds maximum value
+      5. min(): Finds minimum value
+      6. first(): Gets first value
+      7. last(): Gets last value
+    - The agg() function is used when you need to perform multiple aggregation operations at once, especially after 
+      grouping data. It's particularly useful when you want to calculate different metrics simultaneously.
+
+18. Joins
+    - Think of joins as combining two different tables/DataFrames based on a common column
+    - Similar to combining information from two Excel sheets using a common ID
+    - if the join condition passes rows are combined, for non-matching records rows are discarded.
+    Types of Join:
+      1. inner join: default join
+      2. left_outer: everything from inner join + all the rows in the left table with nulls for missing matches
+      3. right_outer: everything from inner join + all the rows in the right table with nulls for missing matches
+      4. outer: everything from inner join + 
+         all the rows in the right table with nulls for missing matches + 
+         all the rows in the left table with nulls for missing matches
+      5. semi-join: everything in the left DF for which there was a match in the right DF
+      6. anti-join: everything in the left DF for which there was NO match in the right DF
+      
+19. 
