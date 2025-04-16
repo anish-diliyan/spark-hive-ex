@@ -244,4 +244,7 @@
       5. semi-join: everything in the left DF for which there was a match in the right DF
       6. anti-join: everything in the left DF for which there was NO match in the right DF
       
-19. 
+19. Various Error while working with PlayGround:
+    1. After the groupBy operation, only the columns used in groupBy and the aggregated columns are available. 
+       When you tried to select departmentsDF("name"), that column was no longer accessible because it wasn't included 
+       in the groupBy or aggregations.

@@ -1,0 +1,60 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "dept_id": 1,
+      "salary": 75000.0,
+      "hire_date": "2020-01-15"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "dept_id": 2,
+      "salary": 82000.0,
+      "hire_date": "2019-03-20"
+    },
+    {
+      "id": 3,
+      "name": "Mike Johnson",
+      "dept_id": 1,
+      "salary": 65000.0,
+      "hire_date": "2021-02-10"
+    },
+    {
+      "id": 4,
+      "name": "Sarah Williams",
+      "dept_id": 3,
+      "salary": 90000.0,
+      "hire_date": "2018-11-30"
+    },
+    {
+      "id": 5,
+      "name": "Robert Brown",
+      "dept_id": 2,
+      "salary": 78000.0,
+      "hire_date": "2020-07-15"
+    },
+    {
+      "id": 6,
+      "name": "Lisa Anderson",
+      "dept_id": 3,
+      "salary": 85000.0,
+      "hire_date": "2019-09-01"
+    },
+    {
+      "id": 7,
+      "name": "David Wilson",
+      "dept_id": 1,
+      "salary": 70000.0,
+      "hire_date": "2021-04-22"
+    },
+    {
+      "id": 8,
+      "name": "Emma Davis",
+      "dept_id": 2,
+      "salary": 80000.0,
+      "hire_date": "2020-12-05"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "departments": [
+    {
+      "id": 1,
+      "name": "Engineering",
+      "location": "New York"
+    },
+    {
+      "id": 2,
+      "name": "Marketing",
+      "location": "San Francisco"
+    },
+    {
+      "id": 3,
+      "name": "Finance",
+      "location": "Chicago"
+    },
+    {
+      "id": 4,
+      "name": "HR",
+      "location": "Boston"
+    }
+  ]
+}

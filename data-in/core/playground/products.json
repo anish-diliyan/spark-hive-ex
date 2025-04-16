@@ -1,0 +1,34 @@
+{
+  "products": [
+    {
+      "product_id": 1,
+      "product_name": "Laptop",
+      "category": "Electronics",
+      "price": 999.99
+    },
+    {
+      "product_id": 2,
+      "product_name": "Smartphone",
+      "category": "Electronics",
+      "price": 699.99
+    },
+    {
+      "product_id": 3,
+      "product_name": "Desktop PC",
+      "category": "Electronics",
+      "price": 1200.00
+    },
+    {
+      "product_id": 4,
+      "product_name": "Printer",
+      "category": "Electronics",
+      "price": 450.00
+    },
+    {
+      "product_id": 5,
+      "product_name": "Monitor",
+      "category": "Electronics",
+      "price": 850.28
+    }
+  ]
+}

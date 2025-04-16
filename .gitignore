@@ -23,4 +23,6 @@ out/
 ./binary/postgres/
 
 derby.log
-hdfs-store/
+data-out/
+data-out/etl/
+data-out/core/
