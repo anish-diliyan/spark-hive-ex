@@ -248,3 +248,32 @@
     1. After the groupBy operation, only the columns used in groupBy and the aggregated columns are available. 
        When you tried to select departmentsDF("name"), that column was no longer accessible because it wasn't included 
        in the groupBy or aggregations.
+    2. inputDataReader.getDepartmentsDF.select(col("id").as("dept_id"), col("name"))
+       - `.select` is optimized as it directly picks and renames only the columns you need.
+       - `.withColumnRenamed` creates a new DataFrame with the column renamed, which can be less efficient if used 
+          multiple times or for many columns.
+    3. Avoid `take(1)` for Single Results
+       The use of `.take(1)` fetches the first row from the resulting DataFrame as a Scala array. While this technically
+       works, but it’s not memory-efficient because:
+         - It pulls the data to the driver (locally).
+         - It is not optimized for distributed execution in Spark.
+       Instead, use `.limit(1)` to return a DataFrame limited to one row, which operates distributed and is more 
+       efficient.
+    4. Specify `orderBy` Direction
+       By default, `.orderBy` sorts in ascending order (1, 2, 3, 4) for numeric columns like `emp_count`. If your intent
+       is to fetch the department with the lowest employee count (as suggested by the ascending order), it’s fine to 
+       leave it as is. However, if you wanted the department with the highest employee count, sort explicitly in 
+       descending order .orderBy(col("emp_count").desc).
+    5. Efficient `.agg` Syntax
+       The aggregation function `.agg(count("*").as("emp_count"))` works fine, but `count("*")` might evaluate all 
+       columns, which can be slightly inefficient. Instead:
+         - Specify explicitly which column you're counting (e.g., `count("emp_id")`). 
+         - This is better for clarity and avoids discrepancies with schemas.
+
+
+
+
+
+
+
+
