@@ -1,0 +1,67 @@
+{
+  "Locations": [
+    { "id": 1, "name": "New York", "address": "123 5th Avenue", "timezone": "EST" },
+    { "id": 2, "name": "San Francisco", "address": "456 Market Street", "timezone": "PST" },
+    { "id": 3, "name": "London", "address": "789 Oxford Street", "timezone": "GMT" },
+    { "id": 4, "name": "Tokyo", "address": "101 Tokyo Tower", "timezone": "JST" },
+    { "id": 5, "name": "Berlin", "address": "11 Brandenburg Gate", "timezone": "CET" }
+  ],
+  "Departments": [
+    { "id": 1, "name": "Engineering", "location_id": 1 },
+    { "id": 2, "name": "Marketing", "location_id": 2 },
+    { "id": 3, "name": "Finance", "location_id": 3 },
+    { "id": 4, "name": "HR", "location_id": 4 },
+    { "id": 5, "name": "Sales", "location_id": 5 }
+  ],
+  "Projects": [
+    { "id": 1, "name": "Project Apollo", "department_id": 1, "start_date": "2023-03-01", "end_date": "2023-12-01" },
+    { "id": 2, "name": "Project Mercury", "department_id": 2, "start_date": "2023-05-01", "end_date": "2023-11-30" },
+    { "id": 3, "name": "Project Gemini", "department_id": 3, "start_date": "2023-07-01", "end_date": "2023-09-30" },
+    { "id": 4, "name": "Project Orion", "department_id": 4, "start_date": "2023-02-01", "end_date": "2023-10-31" },
+    { "id": 5, "name": "Project Artemis", "department_id": 5, "start_date": "2023-04-01", "end_date": "2023-12-20" }
+  ],
+  "Employees": [
+    { "id": 1, "name": "John Smith", "title": "Software Engineer", "dept_id": 1, "location_id": 1, "hire_date": "2015-03-01" },
+    { "id": 2, "name": "Alice Johnson", "title": "Marketing Specialist", "dept_id": 2, "location_id": 2, "hire_date": "2018-07-10" },
+    { "id": 3, "name": "Robert Brown", "title": "Financial Analyst", "dept_id": 3, "location_id": 3, "hire_date": "2020-02-20" },
+    { "id": 4, "name": "Emily Davis", "title": "HR Manager", "dept_id": 4, "location_id": 4, "hire_date": "2017-12-05" },
+    { "id": 5, "name": "Michael Wilson", "title": "Sales Executive", "dept_id": 5, "location_id": 5, "hire_date": "2019-06-15" },
+    { "id": 6, "name": "Sophia Martinez", "title": "Backend Developer", "dept_id": 1, "location_id": 1, "hire_date": "2021-01-12" },
+    { "id": 7, "name": "James Anderson", "title": "Marketing Coordinator", "dept_id": 2, "location_id": 2, "hire_date": "2019-05-30" },
+    { "id": 8, "name": "Isabella Thomas", "title": "Accountant", "dept_id": 3, "location_id": 3, "hire_date": "2022-01-10" },
+    { "id": 9, "name": "William Garcia", "title": "HR Assistant", "dept_id": 4, "location_id": 4, "hire_date": "2016-03-07" },
+    { "id": 10, "name": "Emma Clark", "title": "Sales Representative", "dept_id": 5, "location_id": 5, "hire_date": "2020-09-01" },
+    { "id": 11, "name": "Olivia Lewis", "title": "Frontend Developer", "dept_id": 1, "location_id": 1, "hire_date": "2019-01-23" },
+    { "id": 12, "name": "Liam Walker", "title": "Product Manager", "dept_id": 2, "location_id": 2, "hire_date": "2018-10-15" },
+    { "id": 13, "name": "Charlotte Wright", "title": "Budget Analyst", "dept_id": 3, "location_id": 3, "hire_date": "2021-04-11" },
+    { "id": 14, "name": "Mason Hill", "title": "HR Specialist", "dept_id": 4, "location_id": 4, "hire_date": "2017-11-30" },
+    { "id": 15, "name": "Elijah Scott", "title": "Sales Manager", "dept_id": 5, "location_id": 5, "hire_date": "2021-06-30" },
+    { "id": 16, "name": "Ava Adams", "title": "DevOps Engineer", "dept_id": 1, "location_id": 1, "hire_date": "2023-03-05" },
+    { "id": 17, "name": "Benjamin Baker", "title": "SEO Specialist", "dept_id": 2, "location_id": 2, "hire_date": "2022-09-22" },
+    { "id": 18, "name": "Amelia Thompson", "title": "Corporate Treasurer", "dept_id": 3, "location_id": 3, "hire_date": "2015-02-14" },
+    { "id": 19, "name": "Lucas White", "title": "HR Recruiter", "dept_id": 4, "location_id": 4, "hire_date": "2022-07-12" },
+    { "id": 20, "name": "Mia Harris", "title": "Sales Consultant", "dept_id": 5, "location_id": 5, "hire_date": "2021-03-30" }
+  ],
+  "Salaries": [
+    { "id": 1, "employee_id": 1, "effective_date": "2023-01-01", "amount": 100000 },
+    { "id": 2, "employee_id": 2, "effective_date": "2023-01-01", "amount": 85000 },
+    { "id": 3, "employee_id": 3, "effective_date": "2023-01-01", "amount": 95000 },
+    { "id": 4, "employee_id": 4, "effective_date": "2023-01-01", "amount": 90000 },
+    { "id": 5, "employee_id": 5, "effective_date": "2023-01-01", "amount": 87000 },
+    { "id": 6, "employee_id": 6, "effective_date": "2023-01-01", "amount": 93000 },
+    { "id": 7, "employee_id": 7, "effective_date": "2023-01-01", "amount": 82000 },
+    { "id": 8, "employee_id": 8, "effective_date": "2023-01-01", "amount": 91000 },
+    { "id": 9, "employee_id": 9, "effective_date": "2023-01-01", "amount": 88000 },
+    { "id": 10, "employee_id": 10, "effective_date": "2023-01-01", "amount": 86000 },
+    { "id": 11, "employee_id": 11, "effective_date": "2023-01-01", "amount": 94000 },
+    { "id": 12, "employee_id": 12, "effective_date": "2023-01-01", "amount": 97000 },
+    { "id": 13, "employee_id": 13, "effective_date": "2023-01-01", "amount": 89000 },
+    { "id": 14, "employee_id": 14, "effective_date": "2023-01-01", "amount": 85000 },
+    { "id": 15, "employee_id": 15, "effective_date": "2023-01-01", "amount": 86000 },
+    { "id": 16, "employee_id": 16, "effective_date": "2023-01-01", "amount": 92000 },
+    { "id": 17, "employee_id": 17, "effective_date": "2023-01-01", "amount": 87000 },
+    { "id": 18, "employee_id": 18, "effective_date": "2023-01-01", "amount": 96000 },
+    { "id": 19, "employee_id": 19, "effective_date": "2023-01-01", "amount": 87000 },
+    { "id": 20, "employee_id": 20, "effective_date": "2023-01-01", "amount": 88000 }
+  ]
+}
