@@ -4,6 +4,7 @@ import org.apache.spark.sql.functions.{col, column, expr}
 import org.apache.spark.sql.{Column, DataFrame, SparkSession}
 
 object ColumnsAndExpressions extends App {
+
   private val spark = SparkSession
     .builder()
     .appName("Columns And Expressions")
@@ -26,12 +27,12 @@ object ColumnsAndExpressions extends App {
   // Various ways to select columns
   import spark.implicits._ // Needed for Scala Symbol and interpolated string
   carsDF.select(
-    carsDF.col("Name"),
-    col("Acceleration"),
-    column("Weight_in_lbs"),
-    'Year, // Scala Symbol, auto converted to Column
-    $"Horsepower", // interpolated string, returns Column
-    expr("Origin") // Expression
+      carsDF.col("Name"),
+      col("Acceleration"),
+      column("Weight_in_lbs"),
+      'Year, // Scala Symbol, auto converted to Column
+      $"Horsepower", // interpolated string, returns Column
+      expr("Origin") // Expression
   )
   carsDF.select("Name", "Year")
 
@@ -40,17 +41,17 @@ object ColumnsAndExpressions extends App {
   val weightInKilogram = simpleExpression / 2.2
 
   val carsWithWeightsDF: DataFrame = carsDF.select(
-    col("Name"),
-    simpleExpression,
-    weightInKilogram.as("Weight_in_kg"),
-    expr("Weight_in_lbs / 2.2").as("Weight_in_kg_2")
+      col("Name"),
+      simpleExpression,
+      weightInKilogram.as("Weight_in_kg"),
+      expr("Weight_in_lbs / 2.2").as("Weight_in_kg_2")
   )
 
   carsWithWeightsDF.show()
 
   val carsWithSelectExprWeightsDF: DataFrame = carsDF.selectExpr(
-    "Name",
-    "Weight_in_lbs / 2.2 as Weight_in_kg"
+      "Name",
+      "Weight_in_lbs / 2.2 as Weight_in_kg"
   )
 
   carsWithSelectExprWeightsDF.show()
@@ -59,7 +60,8 @@ object ColumnsAndExpressions extends App {
   val carsWithKilogramDF: DataFrame = carsDF.withColumn("Weight_in_kg", col("Weight_in_lbs") / 2.2)
 
   // Renaming a column
-  val carsWithColumnRenamedDF: DataFrame = carsWithKilogramDF.withColumnRenamed("Weight_in_kg", "Weight in kg")
+  val carsWithColumnRenamedDF: DataFrame =
+    carsWithKilogramDF.withColumnRenamed("Weight_in_kg", "Weight in kg")
 
   // careful with column names inside expr
   carsDF.selectExpr("Weight_in_lbs / 2.2 as `Weight in Kg`").show()

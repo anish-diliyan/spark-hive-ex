@@ -4,6 +4,7 @@ import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object FilterDataFrame extends App {
+
   private val spark = SparkSession
     .builder()
     .appName("Columns And Expressions")

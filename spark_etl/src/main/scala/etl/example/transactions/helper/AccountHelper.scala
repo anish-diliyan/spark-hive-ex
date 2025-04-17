@@ -13,13 +13,13 @@ object AccountHelper extends LoggerImpl {
 
   def getAccountData(completeTxnDF: DataFrame): DataFrame = {
     val accountDetailsDf = completeTxnDF.select(
-      col(ACCT_ID),
-      col(ACCT_CCY),
-      col(BAL_AFTR_BOOKG_NMRC),
-      col(YEAR_MONTH)
+        col(ACCT_ID),
+        col(ACCT_CCY),
+        col(BAL_AFTR_BOOKG_NMRC),
+        col(YEAR_MONTH)
     )
     accountDetailsDf.groupBy(ACCT_ID, ACCT_CCY, YEAR_MONTH).agg(
-      functions.max(BAL_AFTR_BOOKG_NMRC).cast(DecimalType(20, 2)).as(BAL_AFTR_BOOKG_NMRC)
+        functions.max(BAL_AFTR_BOOKG_NMRC).cast(DecimalType(20, 2)).as(BAL_AFTR_BOOKG_NMRC)
     ).addYearMonthColumns().columnRenamed(RENAME_ACCOUNT_MAP)
   }
 

@@ -197,3 +197,11 @@ val rdd3 = sc.parallelize(List("a", "b", "c"))
 val rdd4 = sc.parallelize(List(1, 2, 3))
 val zipped = rdd3.zip(rdd4)
 // Result: (a,1), (b,2), (c,3)
+
+
+- **Format the whole project:** Run the following in a terminal within the project root:
+  sbt scalafmtAll
+- - **Format only `main` source files:** Run:
+    sbt scalafmt
+- - **Format only `test` source files:** Run:
+    sbt test:scalafmt

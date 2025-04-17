@@ -3,6 +3,7 @@ package tutorial.dataframes
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object UnionAndDistinct extends App {
+
   private val spark = SparkSession
     .builder()
     .appName("Columns And Expressions")

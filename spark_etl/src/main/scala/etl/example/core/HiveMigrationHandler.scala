@@ -74,7 +74,10 @@ class HiveMigrationHandler(spark: SparkSession) {
     }
   }
 
-  private def recordMigration(result: MigrationResult, errorMessage: Option[String] = None): Unit = {
+  private def recordMigration(
+      result: MigrationResult,
+      errorMessage: Option[String] = None
+  ): Unit = {
     val status = result.status match {
       case Success => "SUCCESS"
       case Failure(_) => "FAILURE"

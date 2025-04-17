@@ -7,9 +7,9 @@ object SparkSessionProvider {
   private lazy val session: SparkSession = createSession()
 
   private def createSession(): SparkSession = {
-    val config       = ConfigFactory.load()
-    val appName      = config.getString("spark.app.name")
-    val master       = config.getString("spark.master")
+    val config = ConfigFactory.load()
+    val appName = config.getString("spark.app.name")
+    val master = config.getString("spark.master")
     val warehouseDir = config.getString("spark.sql.warehouse.dir")
     println("config values is: " + appName + " " + master + " " + warehouseDir)
     try {

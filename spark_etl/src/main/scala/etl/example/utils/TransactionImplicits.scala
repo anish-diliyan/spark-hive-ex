@@ -9,6 +9,7 @@ import etl.example.constants.TableConstants._
 object TransactionImplicits {
 
   implicit class TransactionRead(ctx: CaspianContext) {
+
     def getAllTransactions: DataFrame = {
       ctx.getSparkSession.read
         .json("data/Small-Bank-Transactions.json")
@@ -16,12 +17,14 @@ object TransactionImplicits {
   }
 
   implicit class RenameColumn(df: DataFrame) {
+
     def columnRenamed(renames: Map[String, String]): DataFrame = {
       renames.foldLeft(df)((origDf, item) => origDf.withColumnRenamed(item._1, item._2))
     }
   }
 
   implicit class YearMonth(txnDF: DataFrame) {
+
     def addYearMonthColumns(): DataFrame = {
       txnDF
         .withColumn(YEAR, substring(col(YEAR_MONTH).cast("string"), 1, 4).cast("int"))

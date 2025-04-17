@@ -4,9 +4,11 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object Aggregations extends App {
+
   val moviesDF: DataFrame = spark.read
     .option("inferSchema", "true")
     .json("data/core/movies.json")
+
   private val spark = SparkSession
     .builder()
     .appName("Columns And Expressions")
@@ -23,8 +25,8 @@ object Aggregations extends App {
   moviesDF
     .groupBy("Director")
     .agg(
-      avg("IMDB_Rating") as "avg_rating",
-      sum("US_Gross") as "total_gross"
+        avg("IMDB_Rating") as "avg_rating",
+        sum("US_Gross") as "total_gross"
     )
     .orderBy("Director")
     .show()

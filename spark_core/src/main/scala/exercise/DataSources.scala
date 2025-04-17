@@ -5,6 +5,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import tutorial.dataframes.UnionAndDistinct.spark
 
 object DataSources extends App {
+
   private val spark = SparkSession
     .builder()
     .appName("Columns And Expressions")
@@ -23,8 +24,8 @@ object DataSources extends App {
 
   // total profit of movies US_Gross + Worldwide_Gross + US_DVD_Sales
   val moviesDFProfit = moviesDF.select(
-    col("Title"),
-    expr("US_Gross + Worldwide_Gross + US_DVD_Sales")
+      col("Title"),
+      expr("US_Gross + Worldwide_Gross + US_DVD_Sales")
   )
   moviesDFProfit.show()
   // select good comedy movies imdb > 6

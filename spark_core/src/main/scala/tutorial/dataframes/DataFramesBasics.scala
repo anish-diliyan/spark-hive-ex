@@ -3,6 +3,7 @@ package tutorial.dataframes
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object DataFramesBasics extends App {
+
   // Creating a SparkSession
   private val spark = SparkSession.builder()
     .appName("DataFrames Basics")

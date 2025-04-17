@@ -8,10 +8,16 @@ import etl.example.transactions.helper.AccountHelper
 import etl.example.transactions.writer.TransactionsWriter
 
 class TransactionProcess extends CaspianProcess with LoggerImpl {
-  override def run(ctx: CaspianContext, date: LocalDate, env: CaspianEnv, migration: Boolean): Unit = {
+
+  override def run(
+      ctx: CaspianContext,
+      date: LocalDate,
+      env: CaspianEnv,
+      migration: Boolean
+  ): Unit = {
     info(s"Transaction Process started with env: $env , date: $date , migration: $migration")
 
-    if(migration)
+    if (migration)
       new HiveMigrationHandler(ctx.getSparkSession).executeMigration()
     else
       info("Migration skipped...because already applied")
@@ -27,4 +33,3 @@ class TransactionProcess extends CaspianProcess with LoggerImpl {
     accountDFFromHive.show(10, truncate = false)
   }
 }
-

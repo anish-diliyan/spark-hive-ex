@@ -4,6 +4,7 @@ import org.apache.spark.sql.functions.{approx_count_distinct, avg, count, countD
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object Aggregations extends App {
+
   private val spark = SparkSession
     .builder()
     .appName("Columns And Expressions")
@@ -44,7 +45,7 @@ object Aggregations extends App {
   val avgRatingByGenreDF = moviesDF
     .groupBy("Major_Genre")
     .agg(
-      count("*").as("N_Movies"),
-      avg("IMDB_Rating").as("Imdb_Rating")
+        count("*").as("N_Movies"),
+        avg("IMDB_Rating").as("Imdb_Rating")
     ).orderBy("N_Movies")
 }
