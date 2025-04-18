@@ -1,279 +1,489 @@
-1. What is DataFrame?
-   A DataFrame is a fundamental data structure in Spark that organizes data into a 2-dimensional table format with rows 
-   and columns, similar to a spreadsheet or a SQL table.
-   Following is the key features of dataframe:
-   1. Structure :
-      1. Organized in columns (like a database table)
-      2. Each column has a name and a specific data type
-      3. Data is stored in rows
-   2. Distributed :
-      1. Data is partitioned across multiple nodes in a cluster
-      2. Operations can be performed in parallel
-   3. Immutable :
-      1. Once created, cannot be modified
-      2. Transformations create new DataFrames
-   
-2. DataFrame Partitioning Across Cluster Nodes:
-   1. Basic Concept
-      - DataFrame = Distributed data structure
-      - Data split into multiple partitions
-      - Each partition = Logical chunk of data
-      - Partitions distributed across worker nodes
-   2. Architecture Overview
-      - DataFrame
-        ├── Partition 1 → Node 1
-        ├── Partition 2 → Node 2
-        ├── Partition 3 → Node 1
-        └── Partition 4 → Node 3
-   3. How It Works
-      - Reading data creates partitions automatically but configurable
-      - Data automatically split into partitions
-      - Each partition processed independently
-      - One partition cannot span multiple nodes
-      - One node can have multiple partitions
-      - Automatically redistributed if node fails
-      - lazy evaluated, meaning transformations are not executed until an action is called.
+## 1. What is DataFrame?
+A **DataFrame** is a fundamental data structure in Apache Spark that organizes data into a 2-dimensional table format with rows and columns, similar to a spreadsheet or a SQL table.
 
-3. What is Schema?
-   A schema defines the structure of a DataFrame by specifying the names, data types, and nullable properties of
-   its columns. It can be auto-inferred the schema at compile time. It acts as a blueprint that describes how the data 
-   is organized in dataframe.
+### Key Features:
+1. **Structure**:
+    - Organized in columns (like a database table).
+    - Each column has a name and a specific data type.
+    - Data is stored in rows.
 
-4. What is Row?
-   A Row in Spark represents a single record in a DataFrame. Each DataFrame is essentially a collection of Row objects 
-   organized in a structured format with named columns. Basically, a row can contain anything, but it has to conform to
-   the schema that a data frame has.
-   Every row in a DataFrame must have the same structure - meaning the same number of columns with consistent data types
-   as defined in the schema. This is one of the fundamental characteristics of DataFrames.
+2. **Distributed**:
+    - Data is partitioned across multiple nodes in a cluster.
+    - Operations can be performed in parallel.
 
-5. What is Shuffling?
-   Shuffling is the process of redistributing or reorganizing data across the partitions of a distributed dataset.
-     - Redistribution of data across partitions
-     - Happens when data needs to be regrouped
-     - Common in operations like groupBy, join, distinct
-     - Narrow Transformations: No shuffle required
-     - Wide Transformations: Requires shuffle
-   
-6. Spark Type System:
-     1. Compile-time Types (Scala)
-        - Known during compilation
-        - Example: Int, String, case classes
-     2. Runtime Types (Spark SQL)
-        - Known during execution
-        - Example: IntegerType, StringType, StructType
-     Compile-time (Scala)                  | Runtime (Spark)
-     --------------------------------------|------------------
-     Checked by Scala compiler             | Evaluated by Spark
-     Static type checking                  | Dynamic type checking
-     Errors caught during compilation      | Errors found during execution
+3. **Immutable**:
+    - Once created, a DataFrame cannot be modified.
+    - Transformations create new DataFrames.
 
-     3. Basic Types: StringType, IntegerType, LongType, DoubleType, BooleanType, TimestampType
-     4. Complex Types:
-        - StructType: Defining table schemas
-        - ArrayType: List of values, use if your column contains multiple values
-        - MapType: Key-value attributes, use if your column contains key-value
-        
-7. Spark Query Planning and Optimization:
-   Initial Query → Logical Plan → Physical Plan → Execution
-   1. A logical plan represents WHAT operations need to be performed, without specifying HOW they should be 
-      executed.
-   2. A physical plan represents HOW the logical plan should be executed on the cluster.
-      - Catalyst optimizer generates several possible execution strategies
-      - Each strategy represents a different way to execute the same logical plan
-      - Evaluates different physical plans
-      - Selects the most efficient plan based on cost metrics
-   3. Catalyst Optimizer is a query optimization framework in Apache Spark that transforms and optimizes queries written
-      using DataFrame/SQL APIs into efficient execution plans.
+## 2. DataFrame Partitioning Across Cluster Nodes
+### 2.1 Basic Concept:
+- A **DataFrame** is a **distributed data structure**.
+- Data is split into multiple **partitions** where:
+    - Each partition serves as a logical chunk of data.
+    - Partitions are distributed across worker nodes.
 
-8. What is a Spark DAG?
-   A DAG in Spark represents the logical arrangement of operations that will be performed on the data. It's a directed 
-   graph where:
-   - Vertices represent operations (transformations/actions)
-   - Edges represent data flow between operations
-   - The graph is acyclic (no cycles)
+### 2.2 Architecture Overview:
+DataFrame
+├── Partition 1 → Node 1  
+├── Partition 2 → Node 2  
+├── Partition 3 → Node 1  
+└── Partition 4 → Node 3
 
-9. Transformations vs Actions:
-   Transformations (Lazy)    │ Actions (Eager)
-   -------------------------─┼------------------------
-   Create new RDD/DataFrame  │ Return results
-   No immediate execution    │ Trigger execution
-   Build lineage             │ Compute final result
+### 2.3 How It Works:
+- **Reading data** creates partitions **automatically**, but this can be configured.
 
-   Transformations (Build Plan)    Actions (Execute)
-   ┌─────────────────────┐        ┌──────────────┐
-   │ map()               │        │ collect()    │
-   │ filter()            │ ─────► │ count()      │
-   │ groupBy()           │        │ save()       │
-   └─────────────────────┘        └──────────────┘
+### Key Points on Partition Behavior:
+1. Data is automatically divided into partitions.
+2. Each partition is processed independently.
+3. **One partition cannot span multiple nodes.**
+4. **One node can contain multiple partitions.**
+5. Partitions are **redistributed automatically** if a node fails.
 
-10. What is Lineage?
-    Lineage is a record of all transformations that need to be applied to the base data to get the final result. It's 
-    like a recipe that Spark maintains to track how to reconstruct data from the original source.
+- Transformations in Spark are **lazy-evaluated**, meaning:
+    - Transformations are **not executed immediately**.
+    - Execution is triggered only when an **action** (e.g., `show`, `count`, etc.) is called.
 
-11. What is RDD?
-    RDD (Resilient Distributed Dataset) is the fundamental data structure and main programming abstraction in Apache 
-    Spark. It has three key characteristics:
-    - Resilient: RDDs are fault-tolerant, meaning they can recover from failures through a lineage graph. If a 
-       partition is lost or damaged due to node failures, Spark can recompute it using this lineage information.
-    - Distributed: The data is distributed across multiple nodes in a cluster, allowing parallel processing.
-    - Dataset: It's a collection of partitioned data elements.
-    
-12. What is DataSet?
-    A Dataset is a strongly-typed, structured collection of data that provides both static type safety and modern 
-    functional programming interfaces.
-    - Schema-aware: Datasets have a defined structure
-    - Type Safety: Provides compile-time type checking
-    - Performance: Offers high performance with automatic optimization
-    - Structured Data Handling: Best suited for structured data with type safety requirements
-    
-13. Difference between DataFrame, DataSet and RDD?
-    Feature          | RDD           | DataFrame      | Dataset
-    -----------------|---------------|----------------|------------------
-    Schema           | No            | Yes            | Yes
-    Optimization     | Manual        | Automatic      | Automatic
-    Type Safety      | Yes           | No             | Yes
-    Ease of Use      | Complex       | Simple         | Moderate
-    Performance      | Lower         | Highest        | High
-    Best For         | Unstructured  | Structured     | Structured with
-                     | Data          | Data           | Type Safety
-    
-14. Various Read Modes:
-    The mode option determines how Spark handles corrupt records or parsing errors.
-    1. PERMISSIVE Mode (Default)
-       - sets corrupt records to null
-       - .option("columnNameOfCorruptRecord", "_corrupt_record")  // Optional: capture bad records
-    2. FAILFAST Mode
-       - Throws exception on corrupt records
-    3. DROPMALFORMED Mode
-       - Drops corrupt records
+## 3. What is Schema?
+A **schema** defines the structure of a DataFrame by specifying:
+- **Column names**.
+- **Data types**.
+- **Nullable properties** for each column.
 
-15. Various Write Modes:
-    1. Overwrite Mode: Completely replaces existing data
-    2. Append Mode: Adds new data to existing data
-    3. Ignore Mode: Does nothing if data exists
-    4. ErrorIfExists Mode: Throws exception if data exists
+### Key Characteristics:
+- Acts as a **blueprint** for how the data in a DataFrame is structured.
+- Schemas can either be:
+    1. **Auto-Inferred**: Automatically deduced from the data at runtime.
+    2. **Explicitly Defined**: Manually set by the user for stricter data validation.
 
-16. Columns and Expressions:
-    - Projection: Operate on data frame columns and obtain new data frames.
-    1. Columns: Columns are special objects that will allow you to obtain new data frames out of some source data
-       frames by processing the values inside. The col() method takes an argument, which is the column name that we want
-       to obtain. Column is a plain Jvm object that has No data inside.
-       - Different Ways to Reference Columns:
-         1. Using col() function: val salaryCol = col("salary")
-         2. Using DataFrame.col: val nameCol = employeeDF.col("name")
-         3. Using $ symbol: val deptCol = $"department"
-         4. Using column string reference: val idCol = employeeDF("id")
-         5. Using column() function: val salaryCol = column("salary")
-         6. Using Scala Symbol = val deptCol = 'department
-         7. Using plain column names: val salaryAndDept = employeeDF("name", "salary")
-    2. Expressions: Expressions are a powerful construct and will allow you to process data frames in almost any fashion
-       Selecting columns name is the simplest version of expression, Columns is a subtype of Expression, But after you 
-       obtain a simple expression, you can then chain it with various operators.
-       ```scala
-          val simpleExpression: Column = carsDF.col("Weight_in_lbs")
-          val weightInKilogram = simpleExpression / 2.2
-          carsDF.select(
-            col("Name"),
-            simpleExpression,
-            weightInKilogram.as("Weight_in_kg")
-          )
-       ```
-       Alternatively, instead of creating these complex expressions because in practice you will create very, very 
-       complex expressions, you can use the expr method, and you can pass in a SQL like string.
-       ```scala
-          carsDF.select(
-              col("Name"),
-              expr("Weight_in_lbs / 2.2").as("Weight_in_kg")
-          )
-       ```
-       Division operator on Column and inside expr and identical implementation but not same, so the result can slightly
-       differ.
-    3. Select with only expr() call: selectExpr
-       ```scala
-          carsDF.selectExpr(
-            "Name",
-            "Weight_in_lbs / 2.2 as Weight_in_kg"
-          )
-       ```
-    4. Adding a new Column to DF: withColumn()
-       - this will extend a Data Frame with additional column.
-       ```scala 
-           carsDF.withColumn(
-             "Weight_in_kg", col("Weight_in_lbs") / 2.2
-           )
-       ```
-    5. Renaming a Column: withColumnRenamed()
-       ```scala
-          carsDF.withColumnRenamed("Weight_in_lbs", "Weight in pounds")
-       ```
-       - CareFull with column names: When you're doing expressions, be sure to escape reserved characters like spaces or
-         hyphens inside Backticks because the compiler will then figure out that this weight in pounds is a single 
-         symbol, and it will treat it as one.
-       ```scala
-          carsDF.selectExpr("Weight_in_lbs / 2.2 as `Weight in Kg`")
-       ```
-    6. Remove a Column: drop()
-       ```scala
-          carsDF.drop("Weight_in_lbs", "Name")
-       ```
-17. Aggregation:
-    - Think of aggregation as summarizing data - like when you want to calculate totals, averages, or counts from a 
-      large dataset.
-    - Some frequently used functions:
-      1. count(): Counts rows
-      2. sum(): Adds up values
-      3. avg(): Calculates average
-      4. max(): Finds maximum value
-      5. min(): Finds minimum value
-      6. first(): Gets first value
-      7. last(): Gets last value
-    - The agg() function is used when you need to perform multiple aggregation operations at once, especially after 
-      grouping data. It's particularly useful when you want to calculate different metrics simultaneously.
+## 4. What is a Row?
+A **Row** in Spark represents a **single record** in a DataFrame.
 
-18. Joins
-    - Think of joins as combining two different tables/DataFrames based on a common column
-    - Similar to combining information from two Excel sheets using a common ID
-    - if the join condition passes rows are combined, for non-matching records rows are discarded.
-    Types of Join:
-      1. inner join: default join
-      2. left_outer: everything from inner join + all the rows in the left table with nulls for missing matches
-      3. right_outer: everything from inner join + all the rows in the right table with nulls for missing matches
-      4. outer: everything from inner join + 
-         all the rows in the right table with nulls for missing matches + 
-         all the rows in the left table with nulls for missing matches
-      5. semi-join: everything in the left DF for which there was a match in the right DF
-      6. anti-join: everything in the left DF for which there was NO match in the right DF
+### Key Characteristics:
+1. **DataFrame Building Block**:
+    - A DataFrame is essentially a collection of Row objects.
+    - Rows are organized based on named columns defined in the schema.
+
+2. **Schema Conformance**:
+    - Every Row **must conform** to the DataFrame’s schema:
+        - Same number of columns.
+        - Consistent and expected data types for all values across columns.
+
+3. **Flexibility**:
+    - Rows are flexible to hold various types of values **as long as they follow schema rules.**
+
+## 5. What is Shuffling?
+**Shuffling** is the process of redistributing or reorganizing data across partitions in a distributed dataset.
+
+### Characteristics:
+- Redistribution/regrouping of data happens during wide operations like:
+    - **groupBy**.
+    - **join**.
+    - **distinct**.
+
+- **Shuffling introduces performance overhead**:
+    - Requires **extensive network communication**.
+    - Can lead to **significant disk I/O**.
+
+### Transformations Based on Shuffling:
+1. **Narrow Transformations**:
+    - No shuffling required.
+    - Examples: `map`, `filter`.
+
+2. **Wide Transformations**:
+    - Requires shuffling by redistributing data across partitions.
+    - Examples: `groupByKey`, `reduceByKey`.
+
+## 6. Spark Type System
+### 6.1 Compile-time Types (Scala):
+- Known during **compilation**.
+- Examples: `Int`, `String`, `case class`.
+
+### 6.2 Runtime Types (Spark SQL):
+- Known during **execution**.
+- Examples: `IntegerType`, `StringType`, `StructType`.
+
+| Compile-time (Scala)                  | Runtime (Spark SQL)            |
+|---------------------------------------|--------------------------------|
+| Checked by Scala compiler             | Evaluated by Spark             |
+| Static type checking                  | Dynamic type checking          |
+| Errors caught during compilation      | Errors found during execution  |
+
+### 6.3 Spark Data Types:
+1. **Basic Types**:
+    - `StringType`, `IntegerType`, `LongType`, `DoubleType`, `BooleanType`, `TimestampType`.
+
+2. **Complex Types**:
+    - **StructType**: Used to define table schemas.
+    - **ArrayType**: Used when a column contains a list of values.
+    - **MapType**: Used when a column contains key-value attributes.
+## 7. Spark Query Planning and Optimization
+Spark uses a multi-stage process to optimize and execute queries in the most efficient way possible.
+
+### Query Planning Stages:
+1. **Initial Query → Logical Plan → Physical Plan → Execution**
+2. **Logical Plan**:
+    - Represents **WHAT** operations need to be performed.
+    - Does not define HOW the operations should be executed.
+3. **Physical Plan**:
+    - Represents **HOW** the logical plan should be executed on the cluster.
+    - **Catalyst Optimizer** generates several possible execution strategies:
+        - Each strategy represents a different way to execute the same logical plan.
+        - Evaluates different physical plans.
+        - Selects the most efficient plan based on **cost metrics**.
+
+### What is the Catalyst Optimizer?
+Catalyst Optimizer is a **query optimization framework** in Apache Spark. It:
+- Transforms queries written using **DataFrame/SQL APIs** into **optimized execution plans**.
+- Ensures efficient query execution by analyzing and applying optimizations at each stage of the query plan.
+
+---
+
+## 8. What is a Spark DAG?
+A **DAG (Directed Acyclic Graph)** in Spark represents the **logical arrangement of operations** that Spark will perform on the data.
+
+### Key Characteristics:
+- **Vertices**: Represent operations (e.g., transformations, actions).
+- **Edges**: Represent the data flow between operations.
+- **Acyclic**: The graph does not contain any cycles, ensuring no operation loops back.
+
+---
+
+## 9. Transformations vs Actions
+
+| **Transformations (Lazy)**         | **Actions (Eager)**               |
+|-------------------------------------|------------------------------------|
+| Create new RDD/DataFrame            | Return results                    |
+| No immediate execution              | Trigger execution                 |
+| Build lineage                       | Compute final result              |
+
+### Comparison:
+- **Transformations** (Build the Plan):
+    - Examples: `map()`, `filter()`, `groupBy()`
+- **Actions** (Trigger Execution):
+    - Examples: `collect()`, `count()`, `save()`
+
+---
+
+## 10. What is Lineage?
+**Lineage** is a record of all transformations that Spark maintains to track how to reconstruct data from the original source.
+
+### Characteristics:
+- Lineage is like a **recipe** describing how the final result was derived from the input data.
+- Helps in **fault-tolerance**: If a partition is lost, Spark can recompute it using the lineage graph.
+
+---
+
+## 11. What is RDD?
+An **RDD (Resilient Distributed Dataset)** is the fundamental data structure and main programming abstraction in Apache Spark.
+
+### Key Characteristics:
+1. **Resilient**:
+    - RDDs are fault-tolerant, meaning they can recover from failures using their **lineage graph**.
+    - If a partition is lost or damaged, Spark can recompute it using the lineage information.
+2. **Distributed**:
+    - Data is partitioned and distributed across multiple nodes in a cluster for parallel processing.
+3. **Dataset**:
+    - Represents a collection of records or partitioned data elements.
+
+---
+
+## 12. What is Dataset?
+A **Dataset** is a strongly-typed, structured collection of data that combines the benefits of RDDs and DataFrames.
+
+### Key Characteristics:
+- **Schema-Aware**:
+    - Datasets have a strongly defined structure.
+- **Type Safety**:
+    - Provides compile-time type checking, ensuring program safety.
+- **Performance**:
+    - Supports automatic optimizations, leveraging Spark's Catalyst optimizer.
+- **Structured Data Handling**:
+    - Best suited for managing **structured data** with **type safety** and modern functional programming interfaces.
+## 13. Difference Between DataFrame, Dataset, and RDD
+Comparison of key features across RDD, DataFrame, and Dataset:
+
+| **Feature**       | **RDD**         | **DataFrame**    | **Dataset**               |
+|--------------------|-----------------|------------------|---------------------------|
+| **Schema**         | No              | Yes              | Yes                       |
+| **Optimization**   | Manual          | Automatic        | Automatic                 |
+| **Type Safety**    | Yes             | No               | Yes                       |
+| **Ease of Use**    | Complex         | Simple           | Moderate                  |
+| **Performance**    | Lower           | Highest          | High                      |
+| **Best For**       | Unstructured    | Structured       | Structured with           |
+|                    | Data            | Data             | Type Safety               |
+
+---
+
+## 14. Various Read Modes
+The read mode determines how Spark handles corrupt records or parsing errors when reading data.
+
+1. **PERMISSIVE Mode (Default)**:
+    - Sets corrupt records to `null`.
+    - Optional: Capture bad records using `.option("columnNameOfCorruptRecord", "_corrupt_record")`.
+
+2. **FAILFAST Mode**:
+    - Throws an exception on any corrupt records.
+
+3. **DROPMALFORMED Mode**:
+    - Drops corrupt records from the dataset.
+
+---
+
+## 15. Various Write Modes
+Output data can be persisted using the following write modes:
+
+1. **Overwrite Mode**:
+    - Completely replaces existing data.
+
+2. **Append Mode**:
+    - Adds new data to the existing dataset.
+
+3. **Ignore Mode**:
+    - Does nothing if the existing data already exists.
+
+4. **ErrorIfExists Mode**:
+    - Throws an exception if data already exists.
+
+---
+
+## 16. Columns and Expressions
+Columns and expressions enable powerful operations on DataFrames.
+
+### 16.1 Columns:
+Columns are special objects that reference data within DataFrames. They can be used to create new DataFrames by processing the values inside the source data.
+
+#### Ways to Reference Columns:
+1. **Using col() function**:
+   ```scala
+   val salaryCol = col("salary")
+   ```
+
+2. **Using DataFrame.col**:
+   ```scala
+   val nameCol = employeeDF.col("name")
+   ```
+
+3. **Using `$` Symbol**:
+   ```scala
+   val deptCol = $"department"
+   ```
+
+4. **Using column string reference**:
+   ```scala
+   val idCol = employeeDF("id")
+   ```
+
+5. **Using column() function**:
+   ```scala
+   val salaryCol = column("salary")
+   ```
+
+6. **Using Scala Symbol**:
+   ```scala
+   val deptCol = 'department
+   ```
+
+7. **Using plain column names**:
+   ```scala
+   val salaryAndDept = employeeDF("name", "salary")
+   ```
+
+---
+
+### 16.2 Expressions:
+Expressions are powerful constructs for manipulating data. They allow you to process DataFrames in complex ways. Columns are a subtype of `Expression`.
+
+#### Example 1: Basic Expression
+```scala
+val simpleExpression: Column = carsDF.col("Weight_in_lbs")
+val weightInKilogram = simpleExpression / 2.2
+carsDF.select(
+  col("Name"),
+  simpleExpression,
+  weightInKilogram.as("Weight_in_kg")
+)
+```
+
+#### Example 2: Using the `expr` function
+Instead of chaining operations, you can use SQL-style strings with the `expr` method:
+```scala
+carsDF.select(
+    col("Name"),
+    expr("Weight_in_lbs / 2.2").as("Weight_in_kg")
+)
+```
+- Note: Division operator on Columns and inside `expr` have slightly different implementations and may give slightly different results.
+
+#### Example 3: Select with `expr()` only (`selectExpr`)
+```scala
+carsDF.selectExpr(
+  "Name",
+  "Weight_in_lbs / 2.2 as Weight_in_kg"
+)
+```
+
+---
+
+### 16.3 Common Column/Expression Operations:
+1. **Adding a New Column**:
+    - Extend a DataFrame with an additional column using `withColumn()`:
+   ```scala
+   carsDF.withColumn(
+     "Weight_in_kg", col("Weight_in_lbs") / 2.2
+   )
+   ```
+
+2. **Renaming a Column**:
+    - Rename a column with `withColumnRenamed()`:
+   ```scala
+   carsDF.withColumnRenamed("Weight_in_lbs", "Weight in pounds")
+   ```
+    - Be cautious about column names. Use backticks (`) to escape reserved characters like spaces or special symbols:
+   ```scala
+   carsDF.selectExpr("Weight_in_lbs / 2.2 as `Weight in Kg`")
+   ```
+
+3. **Removing a Column**:
+    - Remove one or more columns from a DataFrame using `drop()`:
+   ```scala
+   carsDF.drop("Weight_in_lbs", "Name")
+   ```
+## 17. Aggregation
+Aggregation refers to summarizing data, such as calculating totals, averages, or counts from a large dataset.
+
+### Common Aggregation Functions:
+1. **count()**: Counts rows.
+2. **sum()**: Adds up values.
+3. **avg()**: Calculates the average.
+4. **max()**: Finds the maximum value.
+5. **min()**: Finds the minimum value.
+6. **first()**: Gets the first value.
+7. **last()**: Gets the last value.
+
+### Using `agg()`:
+The `agg()` function is used for performing multiple aggregations simultaneously, especially after grouping data. It simplifies calculating different metrics at the same time.
+
+---
+
+## 18. Joins
+Joins combine two DataFrames (or tables) based on a common column (like combining Excel sheets using a common ID). Rows are combined for matching keys, and non-matching rows are handled depending on the type of join.
+
+### Types of Joins:
+1. **Inner Join**: Default join; combines only matching rows.
+2. **Left Outer Join**: Includes all rows from the left table and fills unmatched rows from the right table with `null`.
+3. **Right Outer Join**: Includes all rows from the right table and fills unmatched rows from the left table with `null`.
+4. **Full Outer Join**: Includes all rows from both tables, filling unmatched rows with `null` in respective columns.
+5. **Semi-Join**: Includes rows from the left DataFrame that have a match in the right DataFrame.
+6. **Anti-Join**: Includes rows from the left DataFrame that do not have a match in the right DataFrame.
+
+---
+
+## 19. Various Errors While Working with PlayGround
+
+### 1. After `groupBy`, only grouped and aggregated columns are accessible:
+If a column is not part of the `groupBy` or aggregation, trying to access it (e.g., `departmentsDF("name")`) will result in an error.
+
+### 2. Using `.select()` vs. `.withColumnRenamed()`:
+- **`.select()`**: Optimized for renaming only the required columns.
+- **`.withColumnRenamed()`**: Creates a new DataFrame with the renamed column, which can be less efficient if used for multiple columns repeatedly.
+
+### 3. Avoiding `take(1)` for Single Results:
+- **Issue**:
+    - `.take(1)` fetches the first row as a Scala array, pulling the data to the driver unnecessarily and is not memory-efficient.
+- **Solution**:
+    - Use `.limit(1)` instead, which operates distributedly and returns a DataFrame with the first row.
+
+### 4. Specify `orderBy` Direction:
+- Default `.orderBy()` sorts in ascending order.
+- To sort descending:
+  ```scala
+  .orderBy(col("emp_count").desc)
+  ```
+
+### 5. Efficient `.agg()` Syntax:
+- Avoid `count("*")` as it evaluates all columns.
+- Instead, specify the column explicitly for clarity and performance:
+  ```scala
+  count("emp_id")
+  ```
+
+### 6. Explicitly Defining Column References:
+When using `.groupBy` and `.agg`:
+- String-based columns (e.g., `.groupBy("dept_name", "loc_name")`) often work better than column references (e.g., `col(...)`).
+
+---
+
+## 20. When to Use `lit()`
+The `lit()` function is important when inserting literal (constant) values into expressions where Spark expects a column or expression.
+
+### Situations Requiring `lit()`:
+1. **Avoiding Misinterpretation**:
+    - Spark could misinterpret a literal value as a column name, causing an error:
+   ```scala
+   df.withColumn("new_col", col("existing_col") + "some_string")
+   // Error: cannot resolve '`some_string`'
+   ```
+
+2. **Using Variables in Expressions**:
+    - Wrap non-column variables explicitly with `lit()` for clarity and correctness:
+   ```scala
+   df.withColumn("new_col", col("existing_col") + lit(5))
+   ```
+
+3. **When Spark Functions Expect Columns**:
+    - Certain Spark functions explicitly require column objects, where literals need to be wrapped with `lit()`.
+
+---
+
+### Best Practices for Using `lit()`:
+
+1. **Use `lit()` When**:
+    - A literal might be confused with a column name.
+    - Combining literals with column expressions.
+    - Working with non-obvious literal types (e.g., strings, floats).
+    - Making transformation logic explicit in expressions.
+
+2. **Omit `lit()` When**:
+    - Passing obvious literals in filters and basic expressions:
+      ```scala
+      df.filter(col("age") > 30)
+      ```
+    - Using basic operations where Spark can handle literals automatically:
+      ```scala
+      df.filter(col("name") === "John")
+      ```
       
-19. Various Error while working with PlayGround:
-    1. After the groupBy operation, only the columns used in groupBy and the aggregated columns are available. 
-       When you tried to select departmentsDF("name"), that column was no longer accessible because it wasn't included 
-       in the groupBy or aggregations.
-    2. inputDataReader.getDepartmentsDF.select(col("id").as("dept_id"), col("name"))
-       - `.select` is optimized as it directly picks and renames only the columns you need.
-       - `.withColumnRenamed` creates a new DataFrame with the column renamed, which can be less efficient if used 
-          multiple times or for many columns.
-    3. Avoid `take(1)` for Single Results
-       The use of `.take(1)` fetches the first row from the resulting DataFrame as a Scala array. While this technically
-       works, but it’s not memory-efficient because:
-         - It pulls the data to the driver (locally).
-         - It is not optimized for distributed execution in Spark.
-       Instead, use `.limit(1)` to return a DataFrame limited to one row, which operates distributed and is more 
-       efficient.
-    4. Specify `orderBy` Direction
-       By default, `.orderBy` sorts in ascending order (1, 2, 3, 4) for numeric columns like `emp_count`. If your intent
-       is to fetch the department with the lowest employee count (as suggested by the ascending order), it’s fine to 
-       leave it as is. However, if you wanted the department with the highest employee count, sort explicitly in 
-       descending order .orderBy(col("emp_count").desc).
-    5. Efficient `.agg` Syntax
-       The aggregation function `.agg(count("*").as("emp_count"))` works fine, but `count("*")` might evaluate all 
-       columns, which can be slightly inefficient. Instead:
-         - Specify explicitly which column you're counting (e.g., `count("emp_id")`). 
-         - This is better for clarity and avoids discrepancies with schemas.
+## 20. Commonly Used Spark Operators
 
+### Arithmetic Operators
+| **Operator** | **Example**            | **Description**                           |
+|--------------|------------------------|-------------------------------------------|
+| `+`          | `df("col1") + 10`      | Adds a literal or another column value.   |
+| `-`          | `df("col1") - df("col2")`  | Subtracts one column’s value from another.|
+| `*`          | `df("col1") * 2`       | Multiplies column values.                 |
+| `/`          | `df("col1") / df("col2")`  | Divides the value of one column by another.|
+| `%`          | `df("col1") % 2`       | Returns the remainder of a division.      |
 
+### Logical Operators
+| **Operator** | **Example**                                      | **Description**                                                  |
+|--------------|---------------------------------------------------|------------------------------------------------------------------|
+| `and`        | `df("col1") > 10 and df("col2") < 20`            | Logical AND: True if both conditions are true.                  |
+| `or`         | `df("col1") > 10 or df("col2") < 20`             | Logical OR: True if at least one condition is true.             |
+| `not`        | `not(df("col1") > 10)`                           | Logical NOT: Negates the condition.                             |
 
+### Relational Operators
+| **Operator** | **Example**                     | **Description**                                                |
+|--------------|----------------------------------|----------------------------------------------------------------|
+| `===`        | `df("col1") === df("col2")`     | Equal to: Compares two columns for equality.                  |
+| `!==`        | `df("col1") !== df("col2")`     | Not Equal: Compares two columns for inequality.               |
+| `<`          | `df("col1") < df("col2")`       | Less Than: Checks if one column’s value is less than another. |
+| `>`          | `df("col1") > df("col2")`       | Greater Than: Checks if one column’s value is greater.        |
+| `<=`         | `df("col1") <= df("col2")`      | Less Than or Equal To: True if one column is <= another.      |
+| `>=`         | `df("col1") >= df("col2")`      | Greater Than or Equal To: True if one column is >= another.   |
 
-
-
-
+### Null Checking Operators
+| **Operator**  | **Example**                | **Description**                                                     |
+|---------------|----------------------------|---------------------------------------------------------------------|
+| `isNull`      | `df("col").isNull`         | Checks if a column value is null.                                   |
+| `isNotNull`   | `df("col").isNotNull`      | Checks if a column value is not null.                               |
 

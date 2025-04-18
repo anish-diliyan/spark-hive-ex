@@ -5,6 +5,7 @@ import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions.{col, dense_rank}
 import playground.InputDataReadEmp
 
+// Find employees who have the second-highest salary in their department.
 object Ex4SecondSalary extends App {
 
   val spark: SparkSession = SparkSession
