@@ -482,8 +482,58 @@ The `lit()` function is important when inserting literal (constant) values into 
 | `>=`         | `df("col1") >= df("col2")`      | Greater Than or Equal To: True if one column is >= another.   |
 
 ### Null Checking Operators
-| **Operator**  | **Example**                | **Description**                                                     |
-|---------------|----------------------------|---------------------------------------------------------------------|
-| `isNull`      | `df("col").isNull`         | Checks if a column value is null.                                   |
-| `isNotNull`   | `df("col").isNotNull`      | Checks if a column value is not null.                               |
+| **Operator**  | **Example**                              | **Description**                                                     |
+|---------------|------------------------------------------|---------------------------------------------------------------------|
+| `isNull`      | `df("col").isNull`                       | Checks if a column value is null.                                   |
+| `isNotNull`   | `df("col").isNotNull`                    | Checks if a column value is not null.                               |
+| `drop("all")` | `df.na.drop("all")`                      | Drops rows where all selected columns are null. |
+| `drop("any")` | `df.na.drop("any", Seq("col1", "col2"))` | Drops rows if any of the specified columns contain null. |
+
+## 21. **What are `when` and `otherwise`?**
+- **`when`**: Acts like an **"if" condition**. It checks whether a certain condition is `true` for each row in a column.
+- **`otherwise`**: Acts like an **"else" condition**. It provides a fallback value if the condition in `when` is `false`.
+
+Together, they allow you to create **new values for a column** or **modify existing values** in a DataFrame, based on 
+one or more conditions.
+```scala
+import org.apache.spark.sql.functions._
+when(condition, value).otherwise(value)
+```
+- **`condition`**: The condition you want to check. It can involve column values, numeric comparisons, string matches, etc.
+- **`value`**: This is the value you want to return if the condition is met (inside `when`) or not met (inside `otherwise`).
+- If you only use **`when`** without **`otherwise`**, rows that don't meet the condition will receive `null`.
+- The **`when`** statements are evaluated in order. The **first condition that matches** will take effect, and no further conditions will be checked after it's met.
+- The **`otherwise`** statement acts as the default or fallback value when none of the preceding `when` conditions are true.
+
+## 22. **What is `explode`?**
+The **`explode`** function in Spark is used to take a column that contains **multiple values** (like a **list/array** or a **map**), and 
+convert it into **separate rows**, one for each value in the list/array/map.
+Think of it as:
+- If you have one row where a column has multiple values, `explode` creates **many rows**—one for each value in that column.
+### **Why is this useful?**
+Imagine you have a table like this:
+
+| **id** | **name** | **scores** |
+| --- | --- | --- |
+| 1 | Alice | [10, 20, 30] |
+| 2 | Bob | [40, 50] |
+| 3 | Cathy | [] (empty array) |
+Now, you want **one row for each score**. Exploding the "scores" column will turn this into:
+
+| **id** | **name** | **score** |
+| --- | --- | --- |
+| 1 | Alice | 10 |
+| 1 | Alice | 20 |
+| 1 | Alice | 30 |
+| 2 | Bob | 40 |
+| 2 | Bob | 50 |
+This is what the **`explode`** function does: **flattens arrays (or maps) into separate rows.**
+
+
+
+
+
+
+
+
 

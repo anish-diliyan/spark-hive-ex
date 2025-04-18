@@ -205,3 +205,8 @@ val zipped = rdd3.zip(rdd4)
     sbt scalafmt
 - - **Format only `test` source files:** Run:
     sbt test:scalafmt
+
+The `MatchError: scala.collection.immutable.Map[_ <: String, Int`
+arises when Spark tries to serialize a column with a Scala map type (`Map[String, Int]`). Spark uses reflection to infer
+encoders for this data, and complex types like maps can cause issues when they are not explicitly handled.
+
