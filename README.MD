@@ -210,3 +210,22 @@ The `MatchError: scala.collection.immutable.Map[_ <: String, Int`
 arises when Spark tries to serialize a column with a Scala map type (`Map[String, Int]`). Spark uses reflection to infer
 encoders for this data, and complex types like maps can cause issues when they are not explicitly handled.
 
+𝗦𝗤𝗟 𝗕𝗮𝘀𝗶𝗰
+
+1. SELECT and WHERE Clauses | Filtering and retrieving data efficiently
+2. GROUP BY and HAVING | Aggregating data with conditional logic
+3. JOINs (INNER, LEFT, RIGHT, FULL) | Combining data from multiple tables
+4. DISTINCT and LIMIT | Handling duplicates and limiting results
+
+𝗦𝗤𝗟 𝗜𝗻𝘁𝗲𝗿𝗺𝗲𝗱𝗶𝗮𝘁𝗲
+
+1. Subqueries | Using queries inside queries for complex filtering
+2. Window Functions (ROW_NUMBER, RANK, DENSE_RANK) | Analyzing data over partitions
+3. CASE Statements | Conditional logic within your queries
+4. Common Table Expressions (CTEs) | Simplifying complex queries for readability
+
+𝗦𝗤𝗟 𝗔𝗱𝘃𝗮𝗻𝗰𝗲
+1. Recursive CTEs | Solving hierarchical and iterative problems
+2. Pivot and Unpivot | Reshaping your data for better insights
+3. Temporary Tables | Storing intermediate results for complex operations
+4. Optimizing SQL Queries | Improving performance with indexing and query plans
