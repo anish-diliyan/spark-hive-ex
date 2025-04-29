@@ -1,43 +1,43 @@
-## **1. What is a Spark Cluster?**
+<h2 align="center">Chapter 1: CLUSTER </h2>
 
 A **Spark cluster** is a distributed computing system consisting of several nodes (computers) working together to process large datasets in parallel. It divides data and operations across multiple machines, enabling fast and efficient processing.
 
 ---
+<h3 align="center"> CLUSTER COMPONENTS </h3>
 
-## **2. Spark Cluster Components**
 ```
-+---------------------------------------------------+
-|                     Driver                        |
-|   (Coordinates tasks & collects final results)    |
-+---------------------------------------------------+
-                    |
-                    | Requests resources
-                    v
-+---------------------------------------------------+
-|                 Cluster Manager                   |
-|      (Allocates resources and monitors workers)   |
-+---------------------------------------------------+
-     |                                |
-     | Sends tasks                    | Sends tasks
-     v                                v
-+--------------------+     +--------------------+     +--------------------+
-|    Worker Node 1   |     |    Worker Node 2   | ... |    Worker Node n   |
-| (Executes tasks    |     | (Executes tasks    |     | (Executes tasks    |
-|  using Executors)  |     |  using Executors)  |     |  using Executors)  |
-+--------------------+     +--------------------+     +--------------------+
-       |                                |
-       |                                |
-+---------------+                +---------------+
-|   Executor 1  |                |   Executor 1  |
-| (Processes    |                | (Processes    |
-|  data)        |                |  data)        |
-+---------------+                +---------------+
-       |                                |
-+---------------+                +---------------+
-|   Executor 2  |                |   Executor 2  |
-| (Processes    |                | (Processes    |
-|  data)        |                |  data)        |
-+---------------+                +---------------+
+                                            +---------------------------------------------------+
+                                            |                     Driver                        |
+                                            |   (Coordinates tasks & collects final results)    |
+                                            +---------------------------------------------------+
+                                                                |
+                                                                | Requests resources
+                                                                v
+                                            +---------------------------------------------------+
+                                            |                 Cluster Manager                   |
+                                            |      (Allocates resources and monitors workers)   |
+                                            +---------------------------------------------------+
+                                                 |                                |
+                                                 | Sends tasks                    | Sends tasks
+                                                 v                                v
+                                            +--------------------+     +--------------------+     +--------------------+
+                                            |    Worker Node 1   |     |    Worker Node 2   | ... |    Worker Node n   |
+                                            | (Executes tasks    |     | (Executes tasks    |     | (Executes tasks    |
+                                            |  using Executors)  |     |  using Executors)  |     |  using Executors)  |
+                                            +--------------------+     +--------------------+     +--------------------+
+                                                   |                                |
+                                                   |                                |
+                                            +---------------+                +---------------+
+                                            |   Executor 1  |                |   Executor 1  |
+                                            | (Processes    |                | (Processes    |
+                                            |  data)        |                |  data)        |
+                                            +---------------+                +---------------+
+                                                   |                                |
+                                            +---------------+                +---------------+
+                                            |   Executor 2  |                |   Executor 2  |
+                                            | (Processes    |                | (Processes    |
+                                            |  data)        |                |  data)        |
+                                            +---------------+                +---------------+
 ```
 
 #### **1. Driver: The Brain of the Cluster**
@@ -56,8 +56,6 @@ The **Driver** is the core part of the Spark application, often referred to as t
 
 **Real-World Analogy:**
 Think of the Driver as the project manager. It plans the tasks and ensures the workers (employee nodes) get everything they need to complete the work. Once the work is done, the manager collects the results and reports them to the client.
-
----
 
 #### **2. Cluster Manager: The Resource Allocator**
 
@@ -85,8 +83,6 @@ The **Cluster Manager** is like a logistics coordinator for the Spark cluster. I
 **Real-World Analogy:**
 The Cluster Manager is like a dispatcher in a delivery company, assigning trucks (Worker Nodes) to deliveries (tasks) based on availability and the size of parcels (data).
 
----
-
 #### **3. Worker Nodes: The Workforce**
 
 The **Worker Nodes** are the machines responsible for **executing tasks** as instructed by the Driver. Each Worker Node runs one or more **Executors**, which are the actual processes handling computations.
@@ -111,8 +107,6 @@ The **Worker Nodes** are the machines responsible for **executing tasks** as ins
 **Real-World Analogy:**
 Imagine Worker Nodes as the blue-collar workers in a factory. Each worker (node) gets a specific set of assignments from the manager (Driver) and uses various tools and resources (Executors and Task Slots) to carry out the job.
 
----
-
 #### **4. Executors: The Workhorses on Worker Nodes**
 
 Each **Executor** is a dedicated Spark process running on a Worker Node. Executors are where **actual computation** takes place.
@@ -130,9 +124,7 @@ Each **Executor** is a dedicated Spark process running on a Worker Node. Executo
 **Real-World Analogy:**
 If Worker Nodes are like factories, Executors are the specialized machines inside. Each machine (Executor) has a job to do, handles tasks assigned to it, and stores goods (data) temporarily.
 
----
-
-#### **5. Spark Application Lifecycle in the Cluster**
+#### **5. Application Lifecycle in the Cluster**
 
 To tie all of these components together, here’s how a typical Spark application runs in the cluster:
 
@@ -149,17 +141,11 @@ To tie all of these components together, here’s how a typical Spark applicatio
 
 ---
 
-#### **6. Fault Tolerance in a Spark Cluster**
+<h3 align="center"> WHY EDGE NODE?</h3>
 
-One key feature of a Spark cluster is **fault tolerance**:
-- If a Worker Node or an Executor fails, the Driver reruns the corresponding task on another node.
-- This is possible because Spark maintains the lineage of data and operations.
+ An **Edge Node** is a standalone machine that acts as an interface between the **user** and the **cluster**.
 
----
-
-#### **7. Use of Edge Node in a Spark Cluster**
-- An **Edge Node** is a standalone machine that acts as an interface between the **user** and the **cluster**.
-### **Key Roles of Edge Nodes**
+#### **Key Roles of Edge Nodes**
 1. **Job Submission**
     - Users log in to the Edge Node and submit their Spark jobs (via APIs, shells, or tools).
     - The user interacts with the cluster through the Edge Node rather than directly accessing the core nodes like the Driver or Worker nodes.
@@ -180,34 +166,11 @@ One key feature of a Spark cluster is **fault tolerance**:
     - Monitoring tools or dashboards like **Spark UI**, **Ganglia**, or **Ambari** can often be accessed from the Edge Node.
     - It acts as a central point for cluster management in some cases.
 
-## **3. Real-World Example: Processing E-commerce Sales Data**
-
-### **Step 1: Job Submission**
-- You write a Spark program in **Scala** and submit it to the cluster.
-    - Example:
-      ```scala
-      // Read sales data from S3
-      val df = spark.read.option("header", "true").csv("s3://ecommerce/sales_data.csv")
-  
-      // Filter data for only completed orders
-      val filteredDF = df.filter($"order_status" === "completed")
-  
-      // Group by product and calculate total quantity sold
-      val productSales = filteredDF.groupBy("product_id").sum("quantity_sold")
-  
-      // Show the results
-      productSales.show()
-      ```
-- The **Driver**:
-    - Reads the code.
-    - Translates it into multiple tasks.
-    - Pushes these tasks to the cluster.
-
 ---
 
-## 3. **Task, Stage, Job**
+<h3 align="center"> Task, Stage, Job </h3>
 
-### 1. **Job: 1 Action = 1 Job.**
+#### 1. **Job: 1 Action = 1 Job.**
 A **job** in Spark is created whenever an **action** (e.g., `count()`, `reduce()`, `collect()`, `save()`, etc.) is triggered.
 
 - **Transformations (like filter, map, etc.)** are lazily executed and just describe a lineage/plan of computation.
@@ -221,7 +184,7 @@ A **job** in Spark is created whenever an **action** (e.g., `count()`, `reduce()
     - The execution doesn't happen until you trigger the `count()` action.
     - Submitting the `count()` action triggers a **Spark job**.
 
-### 2. **Stage**
+#### 2. **Stage**
 A **stage** is a set of **tasks** that can be executed **in parallel**, without requiring data to be shuffled across nodes.
 
 - Spark **breaks down a job into stages** by analyzing the **lineage graph** of RDDs. Stages are created based on **shuffle operations** (like `reduceByKey`, `join`, etc.).
@@ -240,7 +203,7 @@ A **stage** is a set of **tasks** that can be executed **in parallel**, without 
 - Stage 2: `groupBy` triggers a shuffle stage.
 - Stage 3: The final action `count()` creates the result stage.
 
-### 3. **Task**
+#### 3. **Task**
 A **task** is the smallest unit of work in Spark.
 - Each **stage** is divided into many **tasks**, based on the number of **partitions** of the data in the RDD or DataFrame.
 - **Tasks run in parallel** on the **executor nodes** in the cluster. Each task processes a single partition of the data.
@@ -248,12 +211,12 @@ A **task** is the smallest unit of work in Spark.
 **Example with Tasks:**
 - Assume your input file has been split into **100 partitions**. If Stage 1 involves reading the file, then Stage 1 is divided into **100 tasks**, where **each task processes one partition**.
 
-### 4. **Summary**
+#### 4. **Summary**
     - 1 Job → Broken into → Stages.
     - 1 Stage → Contains → Multiple Tasks.
     - Each Task → Runs on → One Data Partition.
 
-### 5. **Example in Real-Time Execution**
+#### 5. **Example in Real-Time Execution**
 ```scala
 val data = sc.textFile("hdfs://file.txt")  // Loads data from HDFS
 val words = data.flatMap(_.split(" "))    // Transformation (lazily evaluated)
@@ -270,7 +233,7 @@ wordCounts.saveAsTextFile("output")      // Action (Triggers Spark Job)
     - Stage 2: Shuffle occurs for the `reduceByKey` operation.
     - Stage 3: Writes the results back to storage (`saveAsTextFile`).
 
-### 6. **Why Shuffling Creates a New Stage**
+#### 6. **Why Shuffling Creates a New Stage**
 1. Suppose you have the following dataset distributed across **3 partitions**:
     ```
       Partition 1: [Red, Blue]
@@ -279,7 +242,7 @@ wordCounts.saveAsTextFile("output")      // Action (Triggers Spark Job)
     ```
 2. If you perform a transformation like `filter` or `map`, Spark processes each partition **independently** (these operations don't require data from outside the current partition)
     - Operations like `filter` or `map` don't cause shuffling, and they all run as part of the **current stage**.
-   
+
 3. However, when you do a transformation like `groupByKey`:
     - Data with the same keys must be grouped together.
     ```
@@ -287,11 +250,107 @@ wordCounts.saveAsTextFile("output")      // Action (Triggers Spark Job)
      Blue -> Partition 3
      Green -> Partition 2
    ```
-   - This requires data from all three partitions to **move across the network (shuffle)** so that the same key resides in the same partition.
-   
+    - This requires data from all three partitions to **move across the network (shuffle)** so that the same key resides in the same partition.
+
 4. Once the data has been shuffled and placed in the right partitions, Spark starts the **next stage** to perform the operation (`groupByKey` or the computation that follows).
 
-### **Step 2: Partitioning and Resource Allocation**
+---
+
+<h3 align="center">Processing E-commerce Sales Data</h3>
+
+#### **Step 1: Job Submission**
+- You write a Spark program in **Scala** and submit it to the cluster.
+    - Example:
+      ```scala
+      // Read sales data from S3
+      val df = spark.read.option("header", "true").csv("s3://ecommerce/sales_data.csv")
+  
+      // Filter data for only completed orders
+      val filteredDF = df.filter($"order_status" === "completed")
+  
+      // Group by product and calculate total quantity sold
+      val productSales = filteredDF.groupBy("product_id").sum("quantity_sold")
+  
+      // Show the results
+      productSales.show()
+      ```
+      
+```
++-------------------+
+|   User Program    |
++-------------------+
+          |
+          v
++-------------------+
+|      Driver       | 
+| - Parses code     |
+| - Builds DAG      |
+| - Divides into    |
+|   Stages & Tasks  |
++-------------------+
+          |
+          v
++-----------------------------+
+|     Cluster Manager         |
+| - Assigns Executors         |
+| - Monitors Worker Nodes     |
++-----------------------------+
+          |
+          v
++------------------------------------------------------------------------+
+|                              Worker Nodes                              |
+|    +----------------+     +----------------+      +----------------+   |
+|    |   Executor 1   |     |   Executor 2   |      |   Executor 3   |   |
+|    +----------------+     +----------------+      +----------------+   |
++------------------------------------------------------------------------+
+          |
+          v
++-----------------------------+
+|       Stage 1: Read Data    |
+| - Tasks: 6 (1 per partition)|
+| - Executors read data from  |
+|   source and process local  |
+|   partitions.               |
++-----------------------------+
+          |
+          v
++-----------------------------+
+|   Stage 2: Filter Data      |
+| - Tasks: 6 (1 per partition)|
+| - Narrow transformation:    |
+|   Filter rows locally.      |
++-----------------------------+
+          |
+          v
++-----------------------------+
+|   Stage 3: Group By         |
+| - Tasks: 12 (shuffle stage) |
+| - Wide transformation:      |
+|   Shuffle data across nodes |
+|   to group by product_id.   |
++-----------------------------+
+          |
+          v
++-----------------------------+
+|   Stage 4: Final Aggregation|
+| - Tasks: 6 (1 per partition)|
+| - Executors calculate total |
+|   quantity sold per product.|
++-----------------------------+
+          |
+          v
++-------------------+
+|      Driver       |
+| - Displays output |
+|   using show()    |
++-------------------+
+```
+- The **Driver**:
+    - Reads the code.
+    - Translates it into multiple tasks.
+    - Pushes these tasks to the cluster.
+
+#### **Step 2: Partitioning and Resource Allocation**
 - The sales dataset (4GB file) is divided into 4 logical **partitions** based on the reading mechanism.
     - Partition 1: Data → Worker Node 1
     - Partition 2: Data → Worker Node 2
@@ -301,9 +360,7 @@ wordCounts.saveAsTextFile("output")      // Action (Triggers Spark Job)
 - The Driver requests the **Cluster Manager** to allocate resources:
     - Worker nodes with CPU cores and memory are selected to execute the tasks.
 
----
-
-### **Step 3: Parallel Task Execution**
+#### **Step 3: Parallel Task Execution**
 1. **Data Processing Starts**:
     - The Driver sends tasks to **Executors** on the Worker Nodes.
 
@@ -317,23 +374,20 @@ wordCounts.saveAsTextFile("output")      // Action (Triggers Spark Job)
 2. **Shuffling Data Across Nodes**:
     - Network communication occurs as data is moved between nodes to ensure that all rows belonging to the same product_id are on the same node.
 
----
-
-### **Step 4: Aggregation and Results Collection**
+#### **Step 4: Aggregation and Results Collection**
 - Once all transformations (filtering, grouping, summing) are applied, the results are:
     - Sent back to the **Driver**.
     - Displayed or written back to a storage system like S3.
 
----
-
-## **3. Monitoring the Process**
+#### **Step 5. Monitoring the Process**
 - Spark provides a Web UI (usually at `http://<driver-node-ip>:4040`).
 - Through the UI:
     - You can monitor job progress, execution stages, and task status.
     - Check for bottlenecks like excessive shuffling overhead.
 
----
-<h3 align="center">Various Data Storage</h3>
+<hr style="border: 5px solid yellow;">
+
+<h2 align="center">Chapter 2: Various Data Storage</h2>
 
 ### 1. **Data Storage in Memory (Primary Storage)**
 Spark is designed to process data **in-memory**, which is one of the major reasons for its speed. By default:
@@ -384,12 +438,13 @@ Once a Spark job execution is complete:
     - `saveAsTextFile`: Writes the output to a file (e.g., HDFS or local filesystem).
     - `collect`: Brings the result to the **driver program** after executing the tasks.
 
----
+<hr style="border: 5px solid yellow;">
 
-## 1. What is DataFrame?
+<h2 align = "center">Chapter 3: DataFrame</h2>
+
 A **DataFrame** is a fundamental data structure in Apache Spark that organizes data into a 2-dimensional table format with rows and columns, similar to a spreadsheet or a SQL table.
 
-### Key Features:
+#### Key Features:
 1. **Structure**:
     - Organized in columns (like a database table).
     - Each column has a name and a specific data type.
@@ -403,14 +458,15 @@ A **DataFrame** is a fundamental data structure in Apache Spark that organizes d
     - Once created, a DataFrame cannot be modified.
     - Transformations create new DataFrames.
 
-## 2. DataFrame Partitioning Across Cluster Nodes
-### 2.1 Basic Concept:
+---
+<h3 align = "center">Partitioning Across Cluster Nodes </h3>
+#### 1. Basic Concept:
 - A **DataFrame** is a **distributed data structure**.
 - Data is split into multiple **partitions** where:
     - Each partition serves as a logical chunk of data.
     - Partitions are distributed across worker nodes.
 
-### 2.2 Architecture Overview:
+#### 2. Architecture Overview:
 ```
 DataFrame
 ├── Partition 1 → Node 1  
@@ -418,36 +474,30 @@ DataFrame
 ├── Partition 3 → Node 1  
 └── Partition 4 → Node 3
 ```
-### 2.3 How It Works:
+#### 3. How It Works:
 - **Reading data** creates partitions **automatically**, but this can be configured.
+- One partition cannot span multiple nodes.
+- One node can contain multiple partitions.
+- Partitions are **redistributed automatically** if a node fails.
 
-### Key Points on Partition Behavior:
-1. Data is automatically divided into partitions.
-2. Each partition is processed independently.
-3. **One partition cannot span multiple nodes.**
-4. **One node can contain multiple partitions.**
-5. Partitions are **redistributed automatically** if a node fails.
-
-- Transformations in Spark are **lazy-evaluated**, meaning:
-    - Transformations are **not executed immediately**.
-    - Execution is triggered only when an **action** (e.g., `show`, `count`, etc.) is called.
-
-## 3. What is Schema?
+---
+<h3 align = "center">What is Schema</h3>
 A **schema** defines the structure of a DataFrame by specifying:
 - **Column names**.
 - **Data types**.
 - **Nullable properties** for each column.
 
-### Key Characteristics:
+#### Key Characteristics:
 - Acts as a **blueprint** for how the data in a DataFrame is structured.
 - Schemas can either be:
     1. **Auto-Inferred**: Automatically deduced from the data at runtime.
     2. **Explicitly Defined**: Manually set by the user for stricter data validation.
 
-## 4. What is a Row?
+---
+<h3 align = "center">What is Row</h3>
 A **Row** in Spark represents a **single record** in a DataFrame.
 
-### Key Characteristics:
+#### Key Characteristics:
 1. **DataFrame Building Block**:
     - A DataFrame is essentially a collection of Row objects.
     - Rows are organized based on named columns defined in the schema.
@@ -460,10 +510,11 @@ A **Row** in Spark represents a **single record** in a DataFrame.
 3. **Flexibility**:
     - Rows are flexible to hold various types of values **as long as they follow schema rules.**
 
-## 5. What is Shuffling?
+---
+<h3 align = "center">What is Shuffling</h3>
 **Shuffling** is the process of redistributing or reorganizing data across partitions in a distributed dataset.
 
-### Characteristics:
+#### Characteristics:
 - Redistribution/regrouping of data happens during wide operations like:
     - **groupBy**.
     - **join**.
@@ -473,7 +524,7 @@ A **Row** in Spark represents a **single record** in a DataFrame.
     - Requires **extensive network communication**.
     - Can lead to **significant disk I/O**.
 
-### Transformations Based on Shuffling:
+#### Transformations Based on Shuffling:
 1. **Narrow Transformations**:
     - No shuffling required.
     - Examples: `map`, `filter`.
@@ -481,13 +532,13 @@ A **Row** in Spark represents a **single record** in a DataFrame.
 2. **Wide Transformations**:
     - Requires shuffling by redistributing data across partitions.
     - Examples: `groupByKey`, `reduceByKey`.
-
-## 6. Spark Type System
-### 6.1 Compile-time Types (Scala):
+---
+<h3 align = "center">Type System</h3>
+#### 1. Compile-time Types (Scala):
 - Known during **compilation**.
 - Examples: `Int`, `String`, `case class`.
 
-### 6.2 Runtime Types (Spark SQL):
+#### 2. Runtime Types (Spark SQL):
 - Known during **execution**.
 - Examples: `IntegerType`, `StringType`, `StructType`.
 
@@ -497,7 +548,7 @@ A **Row** in Spark represents a **single record** in a DataFrame.
 | Static type checking                  | Dynamic type checking          |
 | Errors caught during compilation      | Errors found during execution  |
 
-### 6.3 Spark Data Types:
+#### 3. Data Types:
 1. **Basic Types**:
     - `StringType`, `IntegerType`, `LongType`, `DoubleType`, `BooleanType`, `TimestampType`.
 
@@ -505,7 +556,74 @@ A **Row** in Spark represents a **single record** in a DataFrame.
     - **StructType**: Used to define table schemas.
     - **ArrayType**: Used when a column contains a list of values.
     - **MapType**: Used when a column contains key-value attributes.
-## 7. Spark Query Planning and Optimization
+---
+<h3 align = "center">Transformations vs Actions</h3>
+
+| **Transformations (Lazy)**         | **Actions (Eager)**               |
+|-------------------------------------|------------------------------------|
+| Create new RDD/DataFrame            | Return results                    |
+| No immediate execution              | Trigger execution                 |
+| Build lineage                       | Compute final result              |
+
+---
+
+<h3 align = "center">What is Lineage</h3>
+
+**Lineage** is a record of all transformations that Spark maintains to track how to reconstruct data from the original source.
+
+#### Characteristics:
+- Lineage is like a **recipe** describing how the final result was derived from the input data.
+- Helps in **fault-tolerance**: If a partition is lost, Spark can recompute it using the lineage graph.
+
+---
+
+<h3 align = "center">What is RDD</h3>
+
+An **RDD (Resilient Distributed Dataset)** is the fundamental data structure and main programming abstraction in Apache Spark.
+
+#### Key Characteristics:
+1. **Resilient**:
+    - RDDs are fault-tolerant, meaning they can recover from failures using their **lineage graph**.
+    - If a partition is lost or damaged, Spark can recompute it using the lineage information.
+2. **Distributed**:
+    - Data is partitioned and distributed across multiple nodes in a cluster for parallel processing.
+3. **Dataset**:
+    - Represents a collection of records or partitioned data elements.
+
+---
+
+<h3 align = "center">What is Dataset</h3>
+
+A **Dataset** is a strongly-typed, structured collection of data that combines the benefits of RDDs and DataFrames.
+
+#### Key Characteristics:
+- **Schema-Aware**:
+    - Datasets have a strongly defined structure.
+- **Type Safety**:
+    - Provides compile-time type checking, ensuring program safety.
+- **Performance**:
+    - Supports automatic optimizations, leveraging Spark's Catalyst optimizer.
+- **Structured Data Handling**:
+    - Best suited for managing **structured data** with **type safety** and modern functional programming interfaces.
+ 
+---
+
+#### Difference Between DataFrame, Dataset, and RDD
+
+| **Feature**       | **RDD**         | **DataFrame**    | **Dataset**               |
+|--------------------|-----------------|------------------|---------------------------|
+| **Schema**         | No              | Yes              | Yes                       |
+| **Optimization**   | Manual          | Automatic        | Automatic                 |
+| **Type Safety**    | Yes             | No               | Yes                       |
+| **Ease of Use**    | Complex         | Simple           | Moderate                  |
+| **Performance**    | Lower           | Highest          | High                      |
+| **Best For**       | Unstructured    | Structured       | Structured with           |
+|                    | Data            | Data             | Type Safety               |
+ 
+<hr style="border: 5px solid yellow;">
+
+<h2 align = "center">Chapter 4: Query Planning and Optimization</h2>
+
 Spark uses a multi-stage process to optimize and execute queries in the most efficient way possible.
 
 ### Query Planning Stages:
@@ -525,83 +643,142 @@ Catalyst Optimizer is a **query optimization framework** in Apache Spark. It:
 - Transforms queries written using **DataFrame/SQL APIs** into **optimized execution plans**.
 - Ensures efficient query execution by analyzing and applying optimizations at each stage of the query plan.
 
----
+<hr style="border: 5px solid yellow;">
 
-## 8. What is a Spark DAG?
-A **DAG (Directed Acyclic Graph)** in Spark represents the **logical arrangement of operations** that Spark will perform on the data.
+<h2 align="center">Memory-Related Errors</h2>
 
-### Key Characteristics:
-- **Vertices**: Represent operations (e.g., transformations, actions).
-- **Edges**: Represent the data flow between operations.
-- **Acyclic**: The graph does not contain any cycles, ensuring no operation loops back.
+## 1. Out of Memory Errors at the Driver
+The Driver is responsible for coordinating tasks and collecting results. Memory issues occur when:
+- Large data (e.g., `collect()`, `toLocalIterator()`) is brought back to the Driver.
+- Insufficient memory is allocated to the Driver.
 
----
-
-## 9. Transformations vs Actions
-
-| **Transformations (Lazy)**         | **Actions (Eager)**               |
-|-------------------------------------|------------------------------------|
-| Create new RDD/DataFrame            | Return results                    |
-| No immediate execution              | Trigger execution                 |
-| Build lineage                       | Compute final result              |
-
-### Comparison:
-- **Transformations** (Build the Plan):
-    - Examples: `map()`, `filter()`, `groupBy()`
-- **Actions** (Trigger Execution):
-    - Examples: `collect()`, `count()`, `save()`
+### **Solution:**
+- **Avoid large collect operations:** Use `take()` or aggregate results in the Executors.
+- **Increase Driver memory:**
+  ```bash
+  --conf spark.driver.memory=4g
+  ```
+- **Enable Garbage Collection (GC) logging:** Monitor and optimize GC behavior using `-XX:+PrintGCDetails`.
 
 ---
 
-## 10. What is Lineage?
-**Lineage** is a record of all transformations that Spark maintains to track how to reconstruct data from the original source.
+## 2. Out of Memory Errors at the Executors
+Executors handle data processing. Memory issues occur due to:
+- Large shuffle operations or high task parallelism.
+- Cached data exceeding memory.
+- Skewed data partitions causing imbalance.
 
-### Characteristics:
-- Lineage is like a **recipe** describing how the final result was derived from the input data.
-- Helps in **fault-tolerance**: If a partition is lost, Spark can recompute it using the lineage graph.
-
----
-
-## 11. What is RDD?
-An **RDD (Resilient Distributed Dataset)** is the fundamental data structure and main programming abstraction in Apache Spark.
-
-### Key Characteristics:
-1. **Resilient**:
-    - RDDs are fault-tolerant, meaning they can recover from failures using their **lineage graph**.
-    - If a partition is lost or damaged, Spark can recompute it using the lineage information.
-2. **Distributed**:
-    - Data is partitioned and distributed across multiple nodes in a cluster for parallel processing.
-3. **Dataset**:
-    - Represents a collection of records or partitioned data elements.
+### **Solution:**
+- **Resize Executor memory:**
+  ```bash
+  --conf spark.executor.memory=8g
+  ```
+- **Optimize data partitions:** Use `repartition()` or `coalesce()` to balance tasks.
+- **Enable spill-to-disk:** Write Shuffle spill to disk:
+  ```bash
+  --conf spark.shuffle.spill.compress=true
+  ```
+- **Cache data selectively:** Avoid unnecessary caching.
+- **Use Tungsten execution engine** for better off-heap memory utilization.
 
 ---
 
-## 12. What is Dataset?
-A **Dataset** is a strongly-typed, structured collection of data that combines the benefits of RDDs and DataFrames.
+## 3. GC (Garbage Collection) Overhead
+GC overhead occurs if JVM spends too much time managing memory.
 
-### Key Characteristics:
-- **Schema-Aware**:
-    - Datasets have a strongly defined structure.
-- **Type Safety**:
-    - Provides compile-time type checking, ensuring program safety.
-- **Performance**:
-    - Supports automatic optimizations, leveraging Spark's Catalyst optimizer.
-- **Structured Data Handling**:
-    - Best suited for managing **structured data** with **type safety** and modern functional programming interfaces.
-## 13. Difference Between DataFrame, Dataset, and RDD
-Comparison of key features across RDD, DataFrame, and Dataset:
-
-| **Feature**       | **RDD**         | **DataFrame**    | **Dataset**               |
-|--------------------|-----------------|------------------|---------------------------|
-| **Schema**         | No              | Yes              | Yes                       |
-| **Optimization**   | Manual          | Automatic        | Automatic                 |
-| **Type Safety**    | Yes             | No               | Yes                       |
-| **Ease of Use**    | Complex         | Simple           | Moderate                  |
-| **Performance**    | Lower           | Highest          | High                      |
-| **Best For**       | Unstructured    | Structured       | Structured with           |
-|                    | Data            | Data             | Type Safety               |
+### **Solution:**
+- **Use G1GC:** Switch to Garbage-First GC:
+  ```bash
+  -XX:+UseG1GC
+  ```
+- **Increase Executor memory:** Allocate enough memory for processing and JVM overhead.
+- **Tune memory fractions:** Adjust `spark.memory.fraction` and `spark.memory.storageFraction`.
+- **Use Kryo serializer:**
+  ```scala
+  spark.conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+  ```
 
 ---
+
+## 4. Shuffle Memory Errors
+Shuffle memory errors occur during operations like join or groupByKey with large datasets.
+
+### **Solution:**
+- **Optimize shuffle partitions:** Adjust `spark.sql.shuffle.partitions` or `spark.default.parallelism`.
+- **Tune shuffle memory:** Increase `spark.shuffle.file.buffer`.
+- **Avoid wide transformations:** Optimize queries to minimize shuffling.
+
+---
+
+## 5. Data Skew
+Skewed data causes certain Executors to process significantly larger partitions than others.
+
+### **Solution:**
+- **Identify skewed keys:** Debug/log data distributions.
+- **Redistribute skewed data:** Balance with random prefixing techniques.
+- **Increase partitions:** Use `repartition()` to split large partitions.
+
+---
+
+## 6. Off-heap Memory Errors
+Off-heap memory is used to store serialized objects. Misconfigurations or lack of off-heap memory leads to issues.
+
+### **Solution:**
+- **Enable off-heap memory:**
+  ```bash
+  --conf spark.memory.offHeap.enabled=true
+  --conf spark.memory.offHeap.size=1g
+  ```
+
+---
+
+## 7. Serialization-Related Errors
+Large objects, complex data structures, or improper serialization can overload memory.
+
+### **Solution:**
+- **Switch to Kryo serializer:**
+  ```scala
+  spark.conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+  ```
+- **Minimize closures:** Pass minimal data in closures.
+- **Broadcast variables:** Use `broadcast()` for frequently reused datasets.
+
+---
+
+## 8. Driver or Executor Crash
+Memory-intensive applications may crash with OutOfMemory or GC errors.
+
+### **Solution:**
+- **Monitor logs:** Check memory issues in Spark UI or logs.
+- **Tune JVM settings:** Adjust heap size, GC, and stack settings.
+- **Enable adaptive execution:** Dynamically optimize joins and partitions:
+  ```scala
+  spark.conf.set("spark.sql.adaptive.enabled", true)
+  ```
+
+---
+
+## 9. Disk Spill Issues
+If operations (e.g., joins, aggregations) exceed memory, Spark writes to disk, leading to slow performance.
+
+### **Solution:**
+- **Add more Executor memory** to avoid spilling.
+- **Tune shuffle spilling:** Enable efficient spilling:
+  ```bash
+  --conf spark.shuffle.spill.compress=true
+  ```
+
+---
+
+## General Tips to Avoid Memory Errors
+- **Monitor memory usage:** Use Spark UI or metrics tools like Ganglia or Prometheus.
+- **Enable dynamic resource allocation:** Automatically scale resources:
+  ```bash
+  --conf spark.dynamicAllocation.enabled=true
+  ```
+- **Tune cluster resources:** Optimize cores and memory at the cluster level.
+
+<hr style="border: 5px solid yellow;">
 
 ## 14. Various Read Modes
 The read mode determines how Spark handles corrupt records or parsing errors when reading data.

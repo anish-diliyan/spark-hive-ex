@@ -45,4 +45,5 @@ object Ex1HighestSalary extends App {
     .limit(1)
 
   resultDF.show()
+  Thread.sleep(10000000)
 }
